@@ -136,6 +136,66 @@
       .chapter-list { grid-template-columns: 1fr; }
       .grid-section { padding: 2.5rem 1.2rem; }
     }
+    .buy-section {
+  background: #1a2e1a;
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top: 1px solid #4a6741;
+}
+.buy-section .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c8953a;
+  margin: 0 0 0.75rem;
+}
+.buy-section h2 {
+  font-size: 28px;
+  font-weight: 400;
+  color: #e8dfc8;
+  margin: 0 0 0.5rem;
+}
+.buy-section .subtitle {
+  font-size: 15px;
+  color: #8aaa7a;
+  margin: 0 0 2.5rem;
+  font-style: italic;
+}
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+.book-card {
+  background: #0f1f0f;
+  border: 1px solid #3a5732;
+  border-radius: 8px;
+  padding: 1.25rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.book-number { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #6a8a5a; }
+.book-title  { font-size: 20px; font-weight: 400; color: #e8dfc8; margin: 0; }
+.btn-row     { display: flex; gap: 8px; margin-top: 0.75rem; width: 100%; }
+.btn         { flex: 1; padding: 8px 6px; border-radius: 5px; font-size: 12px; font-weight: 600;
+               text-decoration: none; text-align: center; transition: opacity 0.15s; }
+.btn:hover   { opacity: 0.85; }
+.btn-gumroad { background: #e8853a; color: #fff; }
+.btn-payhip  { background: #2d5a3d; color: #b8d4a8; border: 1px solid #4a7a5a; }
+.platform-note { font-size: 12px; color: #6a8a5a; font-style: italic; }
+.firefly-row { display: flex; justify-content: center; gap: 18px; margin-bottom: 1.5rem; opacity: 0.6; }
+.ff          { width: 4px; height: 4px; border-radius: 50%; background: #c8953a;
+               animation: pulse 2.4s ease-in-out infinite; }
+.ff:nth-child(2) { animation-delay: 0.8s; }
+.ff:nth-child(3) { animation-delay: 1.6s; }
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.4); }
+}
   </style>
 </head>
 <body>
