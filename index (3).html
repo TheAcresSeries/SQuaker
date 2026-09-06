@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Acres Series </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink:       #0f1a10;
+      --page:      #f6f1e7;
+      --page-dk:   #ede6d4;
+      --green:     #2a5c24;
+      --green-lt:  #4a8c42;
+      --amber:     #c07828;
+      --amber-lt:  #dfa050;
+      --mist:      #b8cdb5;
+      --white:     #ffffff;
+      --rule:      rgba(42,92,36,0.18);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Lora', Georgia, serif;
+      --font-ui:      'DM Sans', system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--page); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.75; }
+    img { display: block; max-width: 100%; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 200; background: var(--green); display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2.5rem; gap: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
+    .nav-brand { font-family: var(--font-display); font-size: 1.05rem; font-style: italic; color: var(--amber-lt); text-decoration: none; letter-spacing: 0.02em; white-space: nowrap; }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; flex-wrap: wrap; }
+    .nav-links a { font-family: var(--font-ui); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,241,231,0.85); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--amber-lt); }
+
+    /* MASTHEAD */
+    .masthead { background: var(--green); color: var(--page); text-align: center; padding: 4.5rem 2rem 3.5rem; position: relative; overflow: hidden; }
+    .masthead::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 48px; background: var(--page); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+    .masthead-eyebrow { font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mist); margin-bottom: 0.9rem; }
+    .masthead-title { font-family: var(--font-display); font-size: clamp(3rem, 9vw, 6.5rem); line-height: 1; font-weight: 700; color: var(--page); }
+    .masthead-title span { color: var(--amber-lt); font-style: italic; }
+    .masthead-sub { font-family: var(--font-display); font-style: italic; font-size: clamp(1rem, 2.5vw, 1.35rem); color: var(--mist); margin-top: 1rem; }
+    .masthead-rule { width: 56px; height: 3px; background: var(--amber); margin: 1.6rem auto 0; border-radius: 2px; }
+
+    /* BOOK ROWS */
+    .books-area { padding: 4rem 2rem 2rem; }
+    .book-row { display: grid; grid-template-columns: 340px 1fr; grid-template-rows: auto 1fr; grid-template-areas: "cover synopsis" "stats synopsis"; gap: 0; max-width: 1120px; margin: 0 auto 3rem; background: var(--white); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; box-shadow: 0 2px 16px rgba(42,92,36,0.07); transition: box-shadow 0.3s; }
+    .book-row:hover { box-shadow: 0 8px 36px rgba(42,92,36,0.14); }
+    .book-cover-cell { grid-area: cover; position: relative; background: var(--ink); line-height: 0; }
+    .book-cover-cell img { width: 100%; height: auto; display: block; }
+    .book-num-badge { position: absolute; top: 0.75rem; left: 0.75rem; width: 36px; height: 36px; border-radius: 50%; background: var(--amber); color: var(--white); font-family: var(--font-display); font-size: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.35); }
+    .book-synopsis-cell { grid-area: synopsis; align-self: center; padding: 2rem 1.8rem; border-left: 1px solid var(--rule); }
+    .book-label { font-family: var(--font-ui); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green); margin-bottom: 0.5rem; }
+    .book-title { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; line-height: 1.1; color: var(--ink); margin-bottom: 0.3rem; }
+    .book-setting { font-family: var(--font-ui); font-size: 0.8rem; color: var(--green); letter-spacing: 0.06em; margin-bottom: 1.1rem; font-style: italic; }
+    .book-synopsis { font-size: 0.95rem; color: #2a2a2a; line-height: 1.8; }
+    .book-chapters { margin-top: 1.4rem; }
+    .book-chapters summary { font-family: var(--font-ui); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem; }
+    .book-chapters summary::after { content: '▾'; font-size: 0.9rem; transition: transform 0.25s; }
+    details[open] > summary::after { transform: rotate(180deg); }
+    .chapter-list { margin-top: 0.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 1.5rem; }
+    .chapter-list li { font-family: var(--font-ui); font-size: 0.8rem; color: #555; list-style: none; padding: 0.15rem 0; border-bottom: 1px solid var(--rule); }
+    .book-stats-cell { grid-area: stats; padding: 1.3rem 1.4rem; background: var(--page-dk); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.2rem; align-content: start; border-top: 1px solid var(--rule); }
+    .stats-heading { grid-column: 1 / -1; margin-bottom: 0.1rem; font-family: var(--font-ui); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green); border-bottom: 2px solid var(--green); padding-bottom: 0.4rem; }
+    .stat-item { display: flex; flex-direction: column; gap: 0.1rem; }
+    .stat-value { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--green); line-height: 1; }
+    .stat-label { font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.08em; color: #666; text-transform: uppercase; }
+    .stat-divider { display: none; }
+    .buy-btn { display: inline-block; margin-top: auto; padding: 0.65rem 1.1rem; background: var(--green); color: var(--white); font-family: var(--font-ui); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 3px; text-align: center; transition: background 0.2s; }
+    .buy-btn:hover { background: var(--green-lt); }
+
+    /* BAND */
+    .band { background: var(--green); color: var(--page); padding: 2.4rem 2rem; text-align: center; }
+    .band-text { font-family: var(--font-display); font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--mist); }
+    .band-attr { font-family: var(--font-ui); font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber-lt); margin-top: 0.6rem; }
+
+    /* SECTIONS */
+    .grid-section { padding: 3.5rem 2rem; border-top: 1px solid var(--rule); }
+    .grid-section:nth-of-type(even) { background: var(--page-dk); }
+    .section-wrap { max-width: 1120px; margin: 0 auto; }
+    .section-label { font-family: var(--font-ui); font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--green); margin-bottom: 0.5rem; }
+    .section-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.6rem; }
+    .section-rule { width: 44px; height: 2px; background: var(--amber); margin-bottom: 1.6rem; }
+    .section-body { font-size: 0.96rem; color: #333; line-height: 1.85; max-width: 680px; }
+
+    /* VIDEO */
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; margin-top: 1.8rem; }
+    .video-card { background: var(--ink); border-radius: 4px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; color: rgba(246,241,231,0.4); font-family: var(--font-ui); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; border: 2px dashed rgba(246,241,231,0.1); text-align: center; padding: 1rem; }
+
+    /* AUTHOR */
+    .author-grid { display: grid; grid-template-columns: 160px 1fr; gap: 2.4rem; align-items: flex-start; max-width: 760px; margin-top: 1.4rem; }
+    .author-avatar { width: 160px; height: 160px; border-radius: 50%; border: 3px solid var(--green); background: var(--page-dk); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2.5rem; color: var(--amber); flex-shrink: 0; overflow: hidden; }
+    .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* CONTACT */
+    .contact-list { list-style: none; margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; }
+    .contact-list li { font-family: var(--font-ui); font-size: 0.9rem; }
+    .contact-list a { color: var(--green); text-decoration: none; border-bottom: 1px solid var(--rule); }
+    .contact-list a:hover { border-color: var(--green); }
+
+    /* NEXT BOOK */
+    .next-card { margin-top: 1.6rem; padding: 2rem; background: var(--green); color: var(--page); border-radius: 5px; max-width: 680px; }
+    .next-eyebrow { font-family: var(--font-ui); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mist); margin-bottom: 0.5rem; }
+    .next-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--amber-lt); line-height: 1.1; margin-bottom: 0.7rem; }
+    .next-card p { font-size: 0.93rem; color: rgba(246,241,231,0.85); line-height: 1.75; }
+
+    /* ART */
+    .art-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.6rem; }
+    .art-card { aspect-ratio: 2/3; border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); background: var(--ink); display: flex; align-items: center; justify-content: center; color: #aaa; font-family: var(--font-ui); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; padding: 1rem; }
+    .art-card img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* FOOTER */
+    footer { background: var(--ink); color: rgba(246,241,231,0.55); padding: 2rem; text-align: center; }
+    .footer-brand { font-family: var(--font-display); font-size: 1.1rem; font-style: italic; color: var(--amber-lt); margin-bottom: 0.5rem; }
+    .footer-nav { display: flex; justify-content: center; gap: 1.8rem; list-style: none; flex-wrap: wrap; margin-bottom: 1rem; }
+    .footer-nav a { font-family: var(--font-ui); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,241,231,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-nav a:hover { color: var(--amber-lt); }
+    .footer-copy { font-family: var(--font-ui); font-size: 0.75rem; color: rgba(246,241,231,0.3); }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .book-row { grid-template-columns: 1fr; grid-template-rows: auto auto auto; grid-template-areas: "cover" "synopsis" "stats"; }
+      .book-cover-cell img { max-height: 460px; width: auto; margin: 0 auto; }
+      .book-synopsis-cell { align-self: stretch; border-left: none; border-right: none; border-top: 1px solid var(--rule); }
+      .book-stats-cell { border-top: 1px solid var(--rule); }
+      .author-grid { grid-template-columns: 1fr; }
+      .author-avatar { margin: 0 auto; }
+      nav { padding: 0.8rem 1.2rem; }
+      .nav-links { gap: 1rem; }
+    }
+    @media (max-width: 560px) {
+      .masthead { padding: 3rem 1.2rem 2.5rem; }
+      .books-area { padding: 2.5rem 1rem 1rem; }
+      .chapter-list { grid-template-columns: 1fr; }
+      .grid-section { padding: 2.5rem 1.2rem; }
+    }
+    .buy-section {
+  background: #1a2e1a;
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top: 1px solid #4a6741;
+}
+.buy-section .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c8953a;
+  margin: 0 0 0.75rem;
+}
+.buy-section h2 {
+  font-size: 28px;
+  font-weight: 400;
+  color: #e8dfc8;
+  margin: 0 0 0.5rem;
+}
+.buy-section .subtitle {
+  font-size: 15px;
+  color: #8aaa7a;
+  margin: 0 0 2.5rem;
+  font-style: italic;
+}
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+.book-card {
+  background: #0f1f0f;
+  border: 1px solid #3a5732;
+  border-radius: 8px;
+  padding: 1.25rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.book-number { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #6a8a5a; }
+.buy-book-title { font-size: 20px; font-weight: 400; color: #e8dfc8; margin: 0; }
+.btn-row     { display: flex; gap: 8px; margin-top: 0.75rem; width: 100%; }
+.btn         { flex: 1; padding: 8px 6px; border-radius: 5px; font-size: 12px; font-weight: 600;
+               text-decoration: none; text-align: center; transition: opacity 0.15s; }
+.btn:hover   { opacity: 0.85; }
+.btn-gumroad { background: #e8853a; color: #fff; }
+.btn-payhip  { background: #2d5a3d; color: #b8d4a8; border: 1px solid #4a7a5a; }
+.platform-note { font-size: 12px; color: #6a8a5a; font-style: italic; }
+.firefly-row { display: flex; justify-content: center; gap: 18px; margin-bottom: 1.5rem; opacity: 0.6; }
+.ff          { width: 4px; height: 4px; border-radius: 50%; background: #c8953a;
+               animation: pulse 2.4s ease-in-out infinite; }
+.ff:nth-child(2) { animation-delay: 0.8s; }
+.ff:nth-child(3) { animation-delay: 1.6s; }
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.4); }
+}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand">The Acres Series</a>
+  <ul class="nav-links">
+    <li><a href="#acres">Acres</a></li>
+    <li><a href="#scar">Scar</a></li>
+    <li><a href="#arc">Arc</a></li>
+    <li style="display:none"><a href="#video-drops">Film</a></li>
+    <li><a href="#art">Images</a></li>
+    <li><a href="#author">Author</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<header class="masthead">
+  <p class="masthead-eyebrow"></p>
+  <h1 class="masthead-title">The <span>Acres</span> Series</h1>
+  <p class="masthead-sub">~ A Mind-Traveler in a Modern World ~</p>
+  <div class="masthead-rule"></div>
+</header>
+
+<main class="books-area">
+
+  <!-- BOOK 1: ACRES -->
+  <div class="book-row" id="acres">
+    <div class="book-cover-cell">
+      <div class="book-num-badge">1</div>
+      <img src="acres-cover.jpg" alt="Acres book cover"/>
+    </div>
+    <div class="book-synopsis-cell">
+      <p class="book-label">Book One &middot; The Acres Series</p>
+      <h2 class="book-title">Acres</h2>
+      <p class="book-setting">&#128205; Gettysburg, Pennsylvania</p>
+      <p class="book-synopsis">
+        On the acres of Gettysburg is Alicia Averys - a mind traveler who can see the world through the eyes of the deceased and those still living their best days. From a pocketknife to a Ty Cobb rookie card, Alicia can travel through her family tree to explore the American Civil War and more importantly, prepare a party for her favorite Uncle Ricky. 
+        <br><br>
+        Alicia's smile, a declared 10, fades as her final day of school is interrupted by vandals who had too much fun redecorating the school. She replays the night by riding in the mind of the culprits as her classmates' clamor about who did what and why?  Will anyone believe she solved the crime by mind traveling? Or will telling the truth result in her being charged by the police?
+        <br><br>
+      </p>
+      <details class="book-chapters">
+        <summary>Chapter List</summary>
+        <ul class="chapter-list">
+          <li>Ch. 1 &mdash; Creekside</li>
+          <li>Ch. 2 &mdash; Wheels on the Bus</li>
+          <li>Ch. 3 &mdash; The Sandlots</li>
+          <li>Ch. 4 &mdash; Traditions Never Die</li>
+          <li>Ch. 5 &mdash; Sunday Blues</li>
+          <li>Ch. 6 &mdash; From Behind The Blinds</li>
+          <li>Ch. 7 &mdash; Trick or Treat</li>
+          <li>Ch. 8 &mdash; Seeing The Play With Eyes Closed</li>
+          <li>Ch. 9 &mdash; A Friend To The Rescue</li>
+          <li>Ch. 10 &mdash; In Honor of Stone Houses</li>
+          <li>Ch. 11 &mdash; Ready to Party</li>
+          <li>Ch. 12 &mdash; The Final At Bat</li>
+        </ul>
+      </details>
+    </div>
+    <div class="book-stats-cell">
+      <p class="stats-heading">Book Stats</p>
+      <div class="stat-item"><span class="stat-value">September 2026</span><span class="stat-label">Release</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">12</span><span class="stat-label">Chapters</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">~48,000</span><span class="stat-label">Words</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">MG / YA</span><span class="stat-label">Genre</span></div>
+    </div>
+  </div>
+
+  <!-- BOOK 2: SCAR -->
+  <div class="book-row" id="scar">
+    <div class="book-cover-cell">
+      <div class="book-num-badge">2</div>
+      <img src="scar-cover.jpg" alt="Scar book cover"/>
+    </div>
+    <div class="book-synopsis-cell">
+      <p class="book-label">Book Two &middot; The Acres Series</p>
+      <h2 class="book-title">Scar</h2>
+      <p class="book-setting">&#128205; Savannah, Georgia</p>
+      <p class="book-synopsis">
+        Alicia leaves the school year behind in search of Southern Comfort and hospitality in the City of Savannah. Her quest is quickly put on hold as the haunting of the Riverfront Exchange requires her full attention and abilities to determine who or what haunts the patrons of the establishment. With help from her cousin, Daphne, who has her own supernatural ability, the two ladies will join forces to pursue ghosts and unexpectedly learn about a little Miss Daisy who calls Daphne's home her own.
+        <br><br>
+      </p>
+      <details class="book-chapters">
+        <summary>Chapter List</summary>
+        <ul class="chapter-list">
+          <li>Ch. 1 &mdash; A Long Trip</li>
+          <li>Ch. 2 &mdash; Cousins &amp; Timber</li>
+          <li>Ch. 3 &mdash; A Dinner Date</li>
+          <li>Ch. 4 &mdash; Easy Living</li>
+          <li>Ch. 5 &mdash; Ask or Wonder</li>
+          <li>Ch. 6 &mdash; Archives</li>
+          <li>Ch. 7 &mdash; Splinters</li>
+          <li>Ch. 8 &mdash; Daisy</li>
+          <li>Ch. 9 &mdash; Binding Two Into One</li>
+          <li>Ch. 10 &mdash; One Last Chance</li>
+          <li>Ch. 11 &mdash; Behind Red Walls</li>
+          <li>Ch. 12 &mdash; All Hands On Deck</li>
+          <li>Ch. 13 &mdash; Two Of A Kind</li>
+        </ul>
+      </details>
+    </div>
+    <div class="book-stats-cell">
+      <p class="stats-heading">Book Stats</p>
+      <div class="stat-item"><span class="stat-value"> ~ September 2026</span><span class="stat-label">Release</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">13</span><span class="stat-label">Chapters</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">~48,000</span><span class="stat-label">Words</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">MG / YA</span><span class="stat-label">Genre</span></div>
+    </div>
+  </div>
+
+  <!-- BOOK 3: ARC -->
+  <div class="book-row" id="arc">
+    <div class="book-cover-cell">
+      <div class="book-num-badge">3</div>
+      <img src="arc-cover.jpg" alt="Arc book cover"/>
+    </div>
+    <div class="book-synopsis-cell">
+      <p class="book-label">Book Three &middot; The Acres Series</p>
+      <h2 class="book-title">Arc</h2>
+      <p class="book-setting">&#128205; Gettysburg, Pennsylvania</p>
+      <p class="book-synopsis">
+        Summer has returned to the acres of Gettysburg, Pennsylvania, and so has Daphne, who travels north from Savannah to join Alicia for the Fourth of July. Acting on clues gathered through her mind-travels, Alicia has pinpointed a cave entrance that holds a vast underground world of stalactites, a hidden stream, and walls lined floor to ceiling with crystals that seem to hold entire landscapes inside their faces. Deep in that glittering dark, Russell and Abigail have followed a thread of their own, venturing through the cave with a lantern, a pocketknife, and the stubborn courage that has always defined them. Meanwhile, back on the surface, Alicia watches the whole thing unfold from inside their minds, helpless to intervene but unable to look away.
+        <br><br>
+      </p>
+      <details class="book-chapters">
+        <summary>Chapter List</summary>
+        <ul class="chapter-list">
+          <li>Ch. 1 &mdash; Back to Home</li>
+          <li>Ch. 2 &mdash; An Uneventful Day</li>
+          <li>Ch. 3 &mdash; A Change of Plans</li>
+          <li>Ch. 4 &mdash; Skip to Town</li>
+          <li>Ch. 5 &mdash; A Long Night and New Day</li>
+          <li>Ch. 6 &mdash; Tie-Dye Bracelet</li>
+          <li>Ch. 7 &mdash; Into the Ground</li>
+          <li>Ch. 8 &mdash; Parade</li>
+          <li>Ch. 9 &mdash; New Plan</li>
+          <li>Ch. 10 &mdash; July 2nd</li>
+          <li>Ch. 11 &mdash; A Window View Into The Past</li>
+          <li>Ch. 12 &mdash; Independence Day</li>
+        </ul>
+      </details>
+    </div>
+    <div class="book-stats-cell">
+      <p class="stats-heading">Book Stats</p>
+      <div class="stat-item"><span class="stat-value"> ~ September 1, 2026</span><span class="stat-label">Release</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">12</span><span class="stat-label">Chapters</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">~43,000</span><span class="stat-label">Words</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-value">MG / YA</span><span class="stat-label">Genre</span></div>
+    </div>
+  </div>
+
+</main>
+
+<div class="band">
+  <p class="band-text">"Mind-traveling can be so boring sometimes. At least the acres look nice."</p>
+  <p class="band-attr">&mdash; Alicia Averys</p>
+</div>
+
+<!-- SCREENPLAY.- DROPS -->
+<section class="grid-section" id="video-drops" style="display:none">
+  <div class="section-wrap">
+    <p class="section-label">Coming Soon</p>
+    <h2 class="section-title">The Acres Series Screenplays</h2>
+    <div class="section-rule"></div>
+    <p class="section-body">With Writers Duet software, I am making each story into a screenplay.</p>
+    <div class="video-grid">
+      <div class="video-card">Acres &mdash; 95% Draft Complete</div>
+      <div class="video-card">Scar &mdash; 45% Draft Complete</div>
+      <div class="video-card">Arc &mdash; 0.1% Draft Complete</div>
+    </div>
+  </div>
+</section>
+
+<!-- ART -->
+<section class="grid-section" id="art">
+  <div class="section-wrap">
+    <p class="section-label">Series Images</p>
+    <h2 class="section-title">Images</h2>
+    <div class="section-rule"></div>
+    <p class="section-body">Official cover images for the trilogy.</p>
+    <div class="art-grid">
+      <div class="art-card"><img src="acres-cover.jpg" alt="Acres Cover Art"></div>
+      <div class="art-card"><img src="scar-cover.jpg" alt="Scar Cover Art"></div>
+      <div class="art-card"><img src="arc-cover.jpg" alt="Arc Cover Art"></div>
+    </div>
+  </div>
+</section>
+  
+<!-- AUTHOR -->
+<section class="grid-section" id="author">
+  <div class="section-wrap">
+    <p class="section-label">About the Author</p>
+    <h2 class="section-title">Quaker</h2>
+    <div class="section-rule"></div>
+    <div class="author-grid">
+      <div class="author-avatar">SQ</div>
+      <!-- Replace div above with: <img src="author-photo.jpg" alt="Shane Michael Quaker" class="author-avatar"> -->
+      <div>
+        <p class="section-body">
+          <br><br>
+          Shane grew up a county East of Gettysburg, Pennsylvania — the same location where the Acres takes place. Acres is the first book in a YA supernatural trilogy The Acres Series.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="grid-section" id="contact">
+  <div class="section-wrap">
+    <p class="section-label">Get in Touch</p>
+    <h2 class="section-title">Contact</h2>
+    <div class="section-rule"></div>
+    <p class="section-body">For reader questions, book club inquiries, or media requests &mdash; reach out via email.</p>
+    <ul class="contact-list">
+      <li>&#128231; Email: <a href="mailto:QuakerPressBook@gmail.com">QuakerPressBook@gmail.com</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-brand">The Acres Series</p>
+  <ul class="footer-nav">
+    <li><a href="#acres">Acres</a></li>
+    <li><a href="#scar">Scar</a></li>
+    <li><a href="#arc">Arc</a></li>
+    <li style="display:none"><a href="#video-drops">Film</a></li>
+    <li><a href="#art">Images</a></li>
+    <li><a href="#author">Author</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <p class="footer-copy">&copy; 2026 Quaker Press Books&middot; All rights reserved</p>
+</footer>
+<!-- ── WHERE TO BUY ── -->
+<section class="buy-section">
+  <div class="firefly-row" aria-hidden="true">
+    <span class="ff"></span><span class="ff"></span><span class="ff"></span>
+  </div>
+</section>
+</body>
+</html>
