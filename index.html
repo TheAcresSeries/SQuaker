@@ -43,82 +43,154 @@
     .masthead-title span { color: var(--amber-lt); font-style: italic; }
     .masthead-sub { font-family: var(--font-display); font-style: italic; font-size: clamp(1rem, 2.5vw, 1.35rem); color: var(--mist); margin-top: 1rem; }
     .masthead-rule { width: 56px; height: 3px; background: var(--amber); margin: 1.6rem auto 0; border-radius: 2px; }
-    /* masthead leaves: 15s loop — four oak leaves fall, then one is blown across */
+    /* masthead: 15s loop — keepsakes from the series fall, then one oak leaf is blown across */
     .masthead > :not(.leaf-layer) { position: relative; z-index: 1; }
     .leaf-layer { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
     .leaf-layer .leaf { position: absolute; top: 0; opacity: 0; animation-duration: 15s; animation-timing-function: linear; animation-iteration-count: infinite; will-change: transform, opacity; }
-    .leaf-layer svg { display: block; overflow: visible; fill: none; stroke: var(--amber-lt); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }
+    .leaf-layer svg { display: block; overflow: visible; fill: none; color: var(--amber-lt); stroke: var(--amber-lt); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }
     .leaf-layer .vein { stroke-width: 0.8; opacity: 0.75; }
-    .leaf-a { left: 12%; width: 40px; animation-name: leaf-fall-a; }
-    @keyframes leaf-fall-a {
-      0.00% { opacity: 0.00; transform: translate(0.0px, -60px) rotate(28deg); }
-      3.33% { opacity: 0.62; transform: translate(20.7px, -28px) rotate(49deg); }
-      6.67% { opacity: 0.90; transform: translate(34.7px, 3px) rotate(56deg); }
-      10.00% { opacity: 0.90; transform: translate(37.5px, 35px) rotate(46deg); }
-      13.33% { opacity: 0.90; transform: translate(28.2px, 67px) rotate(25deg); }
-      16.67% { opacity: 0.90; transform: translate(9.8px, 98px) rotate(0deg); }
-      20.00% { opacity: 0.90; transform: translate(-11.7px, 130px) rotate(-20deg); }
-      23.33% { opacity: 0.90; transform: translate(-29.5px, 162px) rotate(-27deg); }
-      26.67% { opacity: 0.90; transform: translate(-37.8px, 193px) rotate(-17deg); }
-      30.00% { opacity: 0.90; transform: translate(-33.9px, 225px) rotate(6deg); }
-      33.33% { opacity: 0.90; transform: translate(-19.0px, 257px) rotate(37deg); }
-      36.67% { opacity: 0.63; transform: translate(2.0px, 288px) rotate(67deg); }
-      40.00% { opacity: 0.00; transform: translate(22.3px, 320px) rotate(87deg); }
-      40.01%, 100% { opacity: 0; transform: translate(0, 320px) rotate(0deg); }
+    .leaf-layer .fall-1 { left: 8%; width: 59px; animation-name: drop-1; }
+    @keyframes drop-1 {
+      0.00% { opacity: 0.00; transform: translate(0.0px, -70px) rotate(20deg); }
+      2.83% { opacity: 0.62; transform: translate(13.0px, -37px) rotate(32deg); }
+      5.67% { opacity: 0.90; transform: translate(22.5px, -3px) rotate(35deg); }
+      8.50% { opacity: 0.90; transform: translate(26.0px, 30px) rotate(29deg); }
+      11.33% { opacity: 0.90; transform: translate(22.5px, 63px) rotate(15deg); }
+      14.17% { opacity: 0.90; transform: translate(13.0px, 97px) rotate(-3deg); }
+      17.00% { opacity: 0.90; transform: translate(0.0px, 130px) rotate(-20deg); }
+      19.83% { opacity: 0.90; transform: translate(-13.0px, 163px) rotate(-32deg); }
+      22.67% { opacity: 0.90; transform: translate(-22.5px, 197px) rotate(-35deg); }
+      25.50% { opacity: 0.90; transform: translate(-26.0px, 230px) rotate(-29deg); }
+      28.33% { opacity: 0.90; transform: translate(-22.5px, 263px) rotate(-15deg); }
+      31.17% { opacity: 0.63; transform: translate(-13.0px, 297px) rotate(3deg); }
+      34.00% { opacity: 0.00; transform: translate(-0.0px, 330px) rotate(20deg); }
+      34.01%, 100% { opacity: 0; transform: translate(0, 330px) rotate(0deg); }
     }
-    .leaf-b { left: 80%; width: 34px; animation-name: leaf-fall-b; }
-    @keyframes leaf-fall-b {
-      0%, 6.99% { opacity: 0; transform: translate(0, -60px) rotate(0deg); }
-      7.00% { opacity: 0.00; transform: translate(28.9px, -60px) rotate(-57deg); }
-      10.42% { opacity: 0.62; transform: translate(28.6px, -28px) rotate(-40deg); }
-      13.83% { opacity: 0.90; transform: translate(19.1px, 3px) rotate(-12deg); }
-      17.25% { opacity: 0.90; transform: translate(3.4px, 35px) rotate(18deg); }
-      20.67% { opacity: 0.90; transform: translate(-13.4px, 67px) rotate(39deg); }
-      24.08% { opacity: 0.90; transform: translate(-25.8px, 98px) rotate(43deg); }
-      27.50% { opacity: 0.90; transform: translate(-30.0px, 130px) rotate(28deg); }
-      30.92% { opacity: 0.90; transform: translate(-24.4px, 162px) rotate(-3deg); }
-      34.33% { opacity: 0.90; transform: translate(-11.0px, 193px) rotate(-40deg); }
-      37.75% { opacity: 0.90; transform: translate(6.0px, 225px) rotate(-73deg); }
-      41.17% { opacity: 0.90; transform: translate(21.0px, 257px) rotate(-92deg); }
-      44.58% { opacity: 0.63; transform: translate(29.3px, 288px) rotate(-92deg); }
-      48.00% { opacity: 0.00; transform: translate(28.1px, 320px) rotate(-75deg); }
-      48.01%, 100% { opacity: 0; transform: translate(0, 320px) rotate(0deg); }
+    .leaf-layer .fall-2 { left: 26%; width: 53px; animation-name: drop-2; }
+    @keyframes drop-2 {
+      0%, 4.28% { opacity: 0; transform: translate(0, -70px) rotate(0deg); }
+      4.29% { opacity: 0.00; transform: translate(26.6px, -70px) rotate(-45deg); }
+      7.12% { opacity: 0.62; transform: translate(33.6px, -37px) rotate(-40deg); }
+      9.95% { opacity: 0.90; transform: translate(31.6px, -3px) rotate(-25deg); }
+      12.79% { opacity: 0.90; transform: translate(21.1px, 30px) rotate(-3deg); }
+      15.62% { opacity: 0.90; transform: translate(5.0px, 63px) rotate(20deg); }
+      18.45% { opacity: 0.90; transform: translate(-12.5px, 97px) rotate(37deg); }
+      21.29% { opacity: 0.90; transform: translate(-26.6px, 130px) rotate(45deg); }
+      24.12% { opacity: 0.90; transform: translate(-33.6px, 163px) rotate(40deg); }
+      26.95% { opacity: 0.90; transform: translate(-31.6px, 197px) rotate(25deg); }
+      29.79% { opacity: 0.90; transform: translate(-21.1px, 230px) rotate(3deg); }
+      32.62% { opacity: 0.90; transform: translate(-5.0px, 263px) rotate(-20deg); }
+      35.45% { opacity: 0.63; transform: translate(12.5px, 297px) rotate(-37deg); }
+      38.29% { opacity: 0.00; transform: translate(26.6px, 330px) rotate(-45deg); }
+      38.30%, 100% { opacity: 0; transform: translate(0, 330px) rotate(0deg); }
     }
-    .leaf-c { left: 33%; width: 46px; animation-name: leaf-fall-c; }
-    @keyframes leaf-fall-c {
-      0%, 15.99% { opacity: 0; transform: translate(0, -60px) rotate(0deg); }
-      16.00% { opacity: 0.00; transform: translate(38.0px, -60px) rotate(30deg); }
-      19.50% { opacity: 0.62; transform: translate(19.8px, -28px) rotate(-6deg); }
-      23.00% { opacity: 0.90; transform: translate(-4.8px, 3px) rotate(-39deg); }
-      26.50% { opacity: 0.90; transform: translate(-27.9px, 35px) rotate(-57deg); }
-      30.00% { opacity: 0.90; transform: translate(-41.9px, 67px) rotate(-54deg); }
-      33.50% { opacity: 0.90; transform: translate(-42.4px, 98px) rotate(-29deg); }
-      37.00% { opacity: 0.90; transform: translate(-29.3px, 130px) rotate(11deg); }
-      40.50% { opacity: 0.90; transform: translate(-6.6px, 162px) rotate(54deg); }
-      44.00% { opacity: 0.90; transform: translate(18.1px, 193px) rotate(86deg); }
-      47.50% { opacity: 0.90; transform: translate(37.0px, 225px) rotate(100deg); }
-      51.00% { opacity: 0.90; transform: translate(44.0px, 257px) rotate(91deg); }
-      54.50% { opacity: 0.63; transform: translate(36.8px, 288px) rotate(63deg); }
-      58.00% { opacity: 0.00; transform: translate(17.7px, 320px) rotate(27deg); }
-      58.01%, 100% { opacity: 0; transform: translate(0, 320px) rotate(0deg); }
+    .leaf-layer .fall-3 { left: 47%; width: 56px; animation-name: drop-3; }
+    @keyframes drop-3 {
+      0%, 8.56% { opacity: 0; transform: translate(0, -70px) rotate(0deg); }
+      8.57% { opacity: 0.00; transform: translate(40.9px, -70px) rotate(37deg); }
+      11.40% { opacity: 0.62; transform: translate(30.7px, -37px) rotate(12deg); }
+      14.24% { opacity: 0.90; transform: translate(12.2px, -3px) rotate(-17deg); }
+      17.07% { opacity: 0.90; transform: translate(-9.5px, 30px) rotate(-41deg); }
+      19.90% { opacity: 0.90; transform: translate(-28.7px, 63px) rotate(-54deg); }
+      22.74% { opacity: 0.90; transform: translate(-40.2px, 97px) rotate(-52deg); }
+      25.57% { opacity: 0.90; transform: translate(-40.9px, 130px) rotate(-37deg); }
+      28.40% { opacity: 0.90; transform: translate(-30.7px, 163px) rotate(-12deg); }
+      31.24% { opacity: 0.90; transform: translate(-12.2px, 197px) rotate(17deg); }
+      34.07% { opacity: 0.90; transform: translate(9.5px, 230px) rotate(41deg); }
+      36.90% { opacity: 0.90; transform: translate(28.7px, 263px) rotate(54deg); }
+      39.74% { opacity: 0.63; transform: translate(40.2px, 297px) rotate(52deg); }
+      42.57% { opacity: 0.00; transform: translate(40.9px, 330px) rotate(37deg); }
+      42.58%, 100% { opacity: 0; transform: translate(0, 330px) rotate(0deg); }
     }
-    .leaf-d { left: 63%; width: 36px; animation-name: leaf-fall-d; }
-    @keyframes leaf-fall-d {
-      0%, 23.99% { opacity: 0; transform: translate(0, -60px) rotate(0deg); }
-      24.00% { opacity: 0.00; transform: translate(21.9px, -60px) rotate(-43deg); }
-      27.50% { opacity: 0.62; transform: translate(32.5px, -28px) rotate(-46deg); }
-      31.00% { opacity: 0.90; transform: translate(32.7px, 3px) rotate(-35deg); }
-      34.50% { opacity: 0.90; transform: translate(22.3px, 35px) rotate(-15deg); }
-      38.00% { opacity: 0.90; transform: translate(4.7px, 67px) rotate(7deg); }
-      41.50% { opacity: 0.90; transform: translate(-14.4px, 98px) rotate(22deg); }
-      45.00% { opacity: 0.90; transform: translate(-28.9px, 130px) rotate(25deg); }
-      48.50% { opacity: 0.90; transform: translate(-34.0px, 162px) rotate(13deg); }
-      52.00% { opacity: 0.90; transform: translate(-28.2px, 193px) rotate(-10deg); }
-      55.50% { opacity: 0.90; transform: translate(-13.2px, 225px) rotate(-39deg); }
-      59.00% { opacity: 0.90; transform: translate(6.0px, 257px) rotate(-65deg); }
-      62.50% { opacity: 0.63; transform: translate(23.2px, 288px) rotate(-81deg); }
-      66.00% { opacity: 0.00; transform: translate(33.0px, 320px) rotate(-82deg); }
-      66.01%, 100% { opacity: 0; transform: translate(0, 320px) rotate(0deg); }
+    .leaf-layer .fall-4 { left: 70%; width: 67px; animation-name: drop-4; }
+    @keyframes drop-4 {
+      0%, 12.85% { opacity: 0; transform: translate(0, -70px) rotate(0deg); }
+      12.86% { opacity: 0.00; transform: translate(11.1px, -70px) rotate(10deg); }
+      15.69% { opacity: 0.62; transform: translate(-2.1px, -37px) rotate(41deg); }
+      18.52% { opacity: 0.90; transform: translate(-14.8px, -3px) rotate(61deg); }
+      21.36% { opacity: 0.90; transform: translate(-23.5px, 30px) rotate(64deg); }
+      24.19% { opacity: 0.90; transform: translate(-25.9px, 63px) rotate(50deg); }
+      27.02% { opacity: 0.90; transform: translate(-21.4px, 97px) rotate(23deg); }
+      29.86% { opacity: 0.90; transform: translate(-11.1px, 130px) rotate(-10deg); }
+      32.69% { opacity: 0.90; transform: translate(2.1px, 163px) rotate(-41deg); }
+      35.52% { opacity: 0.90; transform: translate(14.8px, 197px) rotate(-61deg); }
+      38.36% { opacity: 0.90; transform: translate(23.5px, 230px) rotate(-64deg); }
+      41.19% { opacity: 0.90; transform: translate(25.9px, 263px) rotate(-50deg); }
+      44.02% { opacity: 0.63; transform: translate(21.4px, 297px) rotate(-23deg); }
+      46.86% { opacity: 0.00; transform: translate(11.1px, 330px) rotate(10deg); }
+      46.87%, 100% { opacity: 0; transform: translate(0, 330px) rotate(0deg); }
+    }
+    .leaf-layer .fall-5 { left: 88%; width: 67px; animation-name: drop-5; }
+    @keyframes drop-5 {
+      0%, 17.13% { opacity: 0; transform: translate(0, -70px) rotate(0deg); }
+      17.14% { opacity: 0.00; transform: translate(-15.0px, -70px) rotate(-31deg); }
+      19.98% { opacity: 0.62; transform: translate(-28.3px, -37px) rotate(-35deg); }
+      22.81% { opacity: 0.90; transform: translate(-33.9px, -3px) rotate(-30deg); }
+      25.64% { opacity: 0.90; transform: translate(-30.5px, 30px) rotate(-17deg); }
+      28.48% { opacity: 0.90; transform: translate(-18.9px, 63px) rotate(0deg); }
+      31.31% { opacity: 0.90; transform: translate(-2.2px, 97px) rotate(18deg); }
+      34.14% { opacity: 0.90; transform: translate(15.0px, 130px) rotate(31deg); }
+      36.98% { opacity: 0.90; transform: translate(28.3px, 163px) rotate(35deg); }
+      39.81% { opacity: 0.90; transform: translate(33.9px, 197px) rotate(30deg); }
+      42.64% { opacity: 0.90; transform: translate(30.5px, 230px) rotate(17deg); }
+      45.48% { opacity: 0.90; transform: translate(18.9px, 263px) rotate(-0deg); }
+      48.31% { opacity: 0.63; transform: translate(2.2px, 297px) rotate(-18deg); }
+      51.14% { opacity: 0.00; transform: translate(-15.0px, 330px) rotate(-31deg); }
+      51.15%, 100% { opacity: 0; transform: translate(0, 330px) rotate(0deg); }
+    }
+    .leaf-layer .fall-6 { left: 18%; width: 62px; animation-name: drop-6; }
+    @keyframes drop-6 {
+      0%, 21.42% { opacity: 0; transform: translate(0, -70px) rotate(0deg); }
+      21.43% { opacity: 0.00; transform: translate(-41.1px, -70px) rotate(42deg); }
+      24.26% { opacity: 0.62; transform: translate(-40.0px, -37px) rotate(28deg); }
+      27.10% { opacity: 0.90; transform: translate(-28.2px, -3px) rotate(6deg); }
+      29.93% { opacity: 0.90; transform: translate(-8.9px, 30px) rotate(-17deg); }
+      32.76% { opacity: 0.90; transform: translate(12.9px, 63px) rotate(-36deg); }
+      35.60% { opacity: 0.90; transform: translate(31.1px, 97px) rotate(-45deg); }
+      38.43% { opacity: 0.90; transform: translate(41.1px, 130px) rotate(-42deg); }
+      41.26% { opacity: 0.90; transform: translate(40.0px, 163px) rotate(-28deg); }
+      44.10% { opacity: 0.90; transform: translate(28.2px, 197px) rotate(-6deg); }
+      46.93% { opacity: 0.90; transform: translate(8.9px, 230px) rotate(17deg); }
+      49.76% { opacity: 0.90; transform: translate(-12.9px, 263px) rotate(36deg); }
+      52.60% { opacity: 0.63; transform: translate(-31.1px, 297px) rotate(45deg); }
+      55.43% { opacity: 0.00; transform: translate(-41.1px, 330px) rotate(42deg); }
+      55.44%, 100% { opacity: 0; transform: translate(0, 330px) rotate(0deg); }
+    }
+    .leaf-layer .fall-7 { left: 58%; width: 59px; animation-name: drop-7; }
+    @keyframes drop-7 {
+      0%, 25.70% { opacity: 0; transform: translate(0, -70px) rotate(0deg); }
+      25.71% { opacity: 0.00; transform: translate(-20.1px, -70px) rotate(-15deg); }
+      28.55% { opacity: 0.62; transform: translate(-9.1px, -37px) rotate(13deg); }
+      31.38% { opacity: 0.90; transform: translate(4.2px, -3px) rotate(38deg); }
+      34.21% { opacity: 0.90; transform: translate(16.5px, 30px) rotate(53deg); }
+      37.05% { opacity: 0.90; transform: translate(24.3px, 63px) rotate(53deg); }
+      39.88% { opacity: 0.90; transform: translate(25.7px, 97px) rotate(40deg); }
+      42.71% { opacity: 0.90; transform: translate(20.1px, 130px) rotate(15deg); }
+      45.55% { opacity: 0.90; transform: translate(9.1px, 163px) rotate(-13deg); }
+      48.38% { opacity: 0.90; transform: translate(-4.2px, 197px) rotate(-38deg); }
+      51.21% { opacity: 0.90; transform: translate(-16.5px, 230px) rotate(-53deg); }
+      54.05% { opacity: 0.90; transform: translate(-24.3px, 263px) rotate(-53deg); }
+      56.88% { opacity: 0.63; transform: translate(-25.7px, 297px) rotate(-40deg); }
+      59.71% { opacity: 0.00; transform: translate(-20.1px, 330px) rotate(-15deg); }
+      59.72%, 100% { opacity: 0; transform: translate(0, 330px) rotate(0deg); }
+    }
+    .leaf-layer .fall-8 { left: 38%; width: 56px; animation-name: drop-8; }
+    @keyframes drop-8 {
+      0%, 29.99% { opacity: 0; transform: translate(0, -70px) rotate(0deg); }
+      30.00% { opacity: 0.00; transform: translate(0.6px, -70px) rotate(-38deg); }
+      32.83% { opacity: 0.62; transform: translate(17.5px, -37px) rotate(-59deg); }
+      35.67% { opacity: 0.90; transform: translate(29.7px, -3px) rotate(-65deg); }
+      38.50% { opacity: 0.90; transform: translate(34.0px, 30px) rotate(-53deg); }
+      41.33% { opacity: 0.90; transform: translate(29.2px, 63px) rotate(-27deg); }
+      44.17% { opacity: 0.90; transform: translate(16.5px, 97px) rotate(6deg); }
+      47.00% { opacity: 0.90; transform: translate(-0.6px, 130px) rotate(38deg); }
+      49.83% { opacity: 0.90; transform: translate(-17.5px, 163px) rotate(59deg); }
+      52.67% { opacity: 0.90; transform: translate(-29.7px, 197px) rotate(65deg); }
+      55.50% { opacity: 0.90; transform: translate(-34.0px, 230px) rotate(53deg); }
+      58.33% { opacity: 0.90; transform: translate(-29.2px, 263px) rotate(27deg); }
+      61.17% { opacity: 0.63; transform: translate(-16.5px, 297px) rotate(-6deg); }
+      64.00% { opacity: 0.00; transform: translate(0.6px, 330px) rotate(-38deg); }
+      64.01%, 100% { opacity: 0; transform: translate(0, 330px) rotate(0deg); }
     }
     .leaf-layer .leaf-gust { left: 0; top: var(--gust-y, 50%); width: 38px; animation-name: leaf-gust; }
     @keyframes leaf-gust {
@@ -431,12 +503,16 @@
 </nav>
 
 <header class="masthead">
-  <!-- falling oak leaves (decorative) -->
+  <!-- falling keepsakes (decorative): pocket watch, Play Ball card, medallion, cap, hair clip, pennies, pocket watch, book -->
   <div class="leaf-layer" aria-hidden="true">
-    <div class="leaf leaf-a"><svg viewBox="-16 -24 32 52"><path d="M0 20 C-4 20 -8 18 -7 14 C-12 15 -14 10 -10 7 C-15 6 -15 0 -10 -1 C-14 -4 -13 -10 -8 -9 C-10 -14 -6 -18 -3 -15 C-3 -20 0 -22 0 -22 C0 -22 3 -20 3 -15 C6 -18 10 -14 8 -9 C13 -10 14 -4 10 -1 C15 0 15 6 10 7 C14 10 12 15 7 14 C8 18 4 20 0 20 Z"/><path class="vein" d="M0 27 L0 -18 M0 11 L-7 6 M0 11 L7 6 M0 1 L-9 -2 M0 1 L9 -2 M0 -8 L-5 -11 M0 -8 L5 -11"/></svg></div>
-    <div class="leaf leaf-b"><svg viewBox="-16 -24 32 52"><path d="M0 20 C-4 20 -8 18 -7 14 C-12 15 -14 10 -10 7 C-15 6 -15 0 -10 -1 C-14 -4 -13 -10 -8 -9 C-10 -14 -6 -18 -3 -15 C-3 -20 0 -22 0 -22 C0 -22 3 -20 3 -15 C6 -18 10 -14 8 -9 C13 -10 14 -4 10 -1 C15 0 15 6 10 7 C14 10 12 15 7 14 C8 18 4 20 0 20 Z"/><path class="vein" d="M0 27 L0 -18 M0 11 L-7 6 M0 11 L7 6 M0 1 L-9 -2 M0 1 L9 -2 M0 -8 L-5 -11 M0 -8 L5 -11"/></svg></div>
-    <div class="leaf leaf-c"><svg viewBox="-16 -24 32 52"><path d="M0 20 C-4 20 -8 18 -7 14 C-12 15 -14 10 -10 7 C-15 6 -15 0 -10 -1 C-14 -4 -13 -10 -8 -9 C-10 -14 -6 -18 -3 -15 C-3 -20 0 -22 0 -22 C0 -22 3 -20 3 -15 C6 -18 10 -14 8 -9 C13 -10 14 -4 10 -1 C15 0 15 6 10 7 C14 10 12 15 7 14 C8 18 4 20 0 20 Z"/><path class="vein" d="M0 27 L0 -18 M0 11 L-7 6 M0 11 L7 6 M0 1 L-9 -2 M0 1 L9 -2 M0 -8 L-5 -11 M0 -8 L5 -11"/></svg></div>
-    <div class="leaf leaf-d"><svg viewBox="-16 -24 32 52"><path d="M0 20 C-4 20 -8 18 -7 14 C-12 15 -14 10 -10 7 C-15 6 -15 0 -10 -1 C-14 -4 -13 -10 -8 -9 C-10 -14 -6 -18 -3 -15 C-3 -20 0 -22 0 -22 C0 -22 3 -20 3 -15 C6 -18 10 -14 8 -9 C13 -10 14 -4 10 -1 C15 0 15 6 10 7 C14 10 12 15 7 14 C8 18 4 20 0 20 Z"/><path class="vein" d="M0 27 L0 -18 M0 11 L-7 6 M0 11 L7 6 M0 1 L-9 -2 M0 1 L9 -2 M0 -8 L-5 -11 M0 -8 L5 -11"/></svg></div>
+    <div class="leaf fall-1"><svg viewBox="-24 -24 48 48"><circle cx="0" cy="5" r="14"/><circle cx="0" cy="5" r="11" class="vein"/><rect x="-2.5" y="-13" width="5" height="4" rx="1"/><circle cx="0" cy="-16.5" r="3.5"/><path d="M0 5 L0 -2.5 M0 5 L5 8"/><path class="vein" d="M0 -5.5 L0 -4 M0 14 L0 15.5 M-10.5 5 L-9 5 M9 5 L10.5 5"/></svg></div>
+    <div class="leaf fall-2"><svg viewBox="-24 -24 48 48"><rect x="-12" y="-17" width="24" height="34" rx="2"/><rect class="vein" x="-9" y="-14" width="18" height="21" rx="1"/><circle cx="0" cy="-4" r="5.5"/><path class="vein" d="M-3 -8.5 C-1.5 -6 -1.5 -2 -3 0.5 M3 -8.5 C1.5 -6 1.5 -2 3 0.5"/><text x="0" y="13.5" text-anchor="middle" font-size="4.6" font-family="Georgia, serif" font-weight="700" letter-spacing="0.3" fill="currentColor" stroke="none">PLAY BALL</text></svg></div>
+    <div class="leaf fall-3"><svg viewBox="-24 -24 48 48"><path d="M-9 -21 L-2 -21 L2 -8 L-3 -6 Z M9 -21 L2 -21 L-2 -8 L3 -6 Z"/><circle cx="0" cy="5" r="11"/><circle cx="0" cy="5" r="8" class="vein"/><path d="M0 -0.5 L1.6 3.3 L5.6 3.6 L2.5 6.2 L3.5 10.2 L0 8 L-3.5 10.2 L-2.5 6.2 L-5.6 3.6 L-1.6 3.3 Z"/></svg></div>
+    <div class="leaf fall-4"><svg viewBox="-24 -24 48 48"><path d="M-14 5 C-14 -12 12 -12 14 5 Z"/><path d="M14 5 C20 5 24 7 24 10 C16 11 0 10 -14 8 L-14 5 Z"/><circle cx="0" cy="-7.5" r="1.6"/><path class="vein" d="M0 -6 C-3 -1 -3 2 -3 5 M0 -6 C5 -2 6 1 6 5"/></svg></div>
+    <div class="leaf fall-5"><svg viewBox="-24 -24 48 48"><rect x="-18" y="-5" width="36" height="10" rx="5"/><rect class="vein" x="-13" y="-2" width="24" height="4" rx="2"/><circle cx="14" cy="0" r="1.6"/><path class="vein" d="M-18 0 L-21 0"/></svg></div>
+    <div class="leaf fall-6"><svg viewBox="-24 -24 48 48"><circle cx="-8" cy="6" r="8"/><circle cx="-8" cy="6" r="5.5" class="vein"/><circle cx="8" cy="6" r="8"/><circle cx="8" cy="6" r="5.5" class="vein"/><circle cx="0" cy="-8" r="8"/><circle cx="0" cy="-8" r="5.5" class="vein"/></svg></div>
+    <div class="leaf fall-7"><svg viewBox="-24 -24 48 48"><circle cx="0" cy="5" r="14"/><circle cx="0" cy="5" r="11" class="vein"/><rect x="-2.5" y="-13" width="5" height="4" rx="1"/><circle cx="0" cy="-16.5" r="3.5"/><path d="M0 5 L0 -2.5 M0 5 L5 8"/><path class="vein" d="M0 -5.5 L0 -4 M0 14 L0 15.5 M-10.5 5 L-9 5 M9 5 L10.5 5"/></svg></div>
+    <div class="leaf fall-8"><svg viewBox="-24 -24 48 48"><path d="M-12 -15 L10 -15 L10 14 L-12 14 Z"/><path d="M-12 14 L-10 17 L12 17 L12 -12 L10 -15"/><path d="M-8.5 -15 L-8.5 14"/><path class="vein" d="M-5 -9 L6 -9 M-5 -6 L4 -6 M-5 10 L6 10"/></svg></div>
     <div class="leaf leaf-gust"><svg viewBox="-16 -24 32 52"><path d="M0 20 C-4 20 -8 18 -7 14 C-12 15 -14 10 -10 7 C-15 6 -15 0 -10 -1 C-14 -4 -13 -10 -8 -9 C-10 -14 -6 -18 -3 -15 C-3 -20 0 -22 0 -22 C0 -22 3 -20 3 -15 C6 -18 10 -14 8 -9 C13 -10 14 -4 10 -1 C15 0 15 6 10 7 C14 10 12 15 7 14 C8 18 4 20 0 20 Z"/><path class="vein" d="M0 27 L0 -18 M0 11 L-7 6 M0 11 L7 6 M0 1 L-9 -2 M0 1 L9 -2 M0 -8 L-5 -11 M0 -8 L5 -11"/></svg></div>
   </div>
   <p class="masthead-eyebrow"></p>
