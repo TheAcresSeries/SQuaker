@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Acres Series </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500&family=Courier+Prime&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink:       #0f1a10;
+      --page:      #f6f1e7;
+      --page-dk:   #ede6d4;
+      --green:     #2a5c24;
+      --green-lt:  #4a8c42;
+      --amber:     #c07828;
+      --amber-lt:  #dfa050;
+      --mist:      #b8cdb5;
+      --white:     #ffffff;
+      --rule:      rgba(42,92,36,0.18);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Lora', Georgia, serif;
+      --font-ui:      'DM Sans', system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--page); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.75; }
+    img { display: block; max-width: 100%; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 200; background: var(--green); display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2.5rem; gap: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
+    .nav-brand { font-family: var(--font-display); font-size: 1.05rem; font-style: italic; color: var(--amber-lt); text-decoration: none; letter-spacing: 0.02em; white-space: nowrap; }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; flex-wrap: wrap; }
+    .nav-links a { font-family: var(--font-ui); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,241,231,0.85); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--amber-lt); }
+
+    /* MASTHEAD */
+    .masthead { background: var(--green); color: var(--page); text-align: center; padding: 4.5rem 2rem 3.5rem; position: relative; overflow: hidden; }
+    .masthead::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 48px; background: var(--page); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+    .masthead-eyebrow { font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mist); margin-bottom: 0.9rem; }
+    .masthead-title { font-family: var(--font-display); font-size: clamp(3rem, 9vw, 6.5rem); line-height: 1; font-weight: 700; color: var(--page); }
+    .masthead-title span { color: var(--amber-lt); font-style: italic; }
+    .masthead-sub { font-family: var(--font-display); font-style: italic; font-size: clamp(1rem, 2.5vw, 1.35rem); color: var(--mist); margin-top: 1rem; }
+    .masthead-rule { width: 56px; height: 3px; background: var(--amber); margin: 1.6rem auto 0; border-radius: 2px; }
+    /* masthead: keepsakes fall continuously; every 15s a random one is blown across and knocks aside anything it hits (driven by script below) */
+    .masthead > :not(.leaf-layer) { position: relative; z-index: 1; }
+    .leaf-layer { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .leaf-layer .leaf { position: absolute; top: 0; left: 0; opacity: 0; will-change: transform, opacity; }
+    .leaf-layer svg { display: block; overflow: visible; fill: none; color: var(--amber-lt); stroke: var(--amber-lt); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }
+    .leaf-layer .vein { stroke-width: 0.8; opacity: 0.75; }
+    .leaf-layer .leaf-gust { width: 56px; }
+    @media (prefers-reduced-motion: reduce) { .leaf-layer { display: none; } }
+
+    /* BOOK ROWS */
+    .books-area { padding: 4rem 2rem 2rem; }
+    .book-row { display: grid; grid-template-columns: 340px 1fr; grid-template-rows: auto 1fr; grid-template-areas: "cover synopsis" "stats synopsis"; gap: 0; max-width: 1120px; margin: 0 auto 3rem; background: var(--white); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; box-shadow: 0 2px 16px rgba(42,92,36,0.07); transition: box-shadow 0.3s; }
+    .book-row:hover { box-shadow: 0 8px 36px rgba(42,92,36,0.14); }
+    .book-cover-cell { grid-area: cover; position: relative; background: var(--ink); line-height: 0; }
+    .book-cover-cell img { width: 100%; height: auto; display: block; }
+    .book-num-badge { position: absolute; top: 0.75rem; left: 0.75rem; width: 36px; height: 36px; border-radius: 50%; background: var(--amber); color: var(--white); font-family: var(--font-display); font-size: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.35); }
+    .book-synopsis-cell { grid-area: synopsis; align-self: center; padding: 2rem 1.8rem; border-left: 1px solid var(--rule); }
+    .book-label { font-family: var(--font-ui); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green); margin-bottom: 0.5rem; }
+    .book-title { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; line-height: 1.1; color: var(--ink); margin-bottom: 0.3rem; }
+    .book-setting { font-family: var(--font-ui); font-size: 0.8rem; color: var(--green); letter-spacing: 0.06em; margin-bottom: 1.1rem; font-style: italic; }
+    .book-synopsis { font-size: 0.95rem; color: #2a2a2a; line-height: 1.8; }
+    .book-chapters { margin-top: 1.4rem; }
+    .book-chapters summary { font-family: var(--font-ui); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem; }
+    .book-chapters summary::after { content: '▾'; font-size: 0.9rem; transition: transform 0.25s; }
+    details[open] > summary::after { transform: rotate(180deg); }
+    .chapter-list { margin-top: 0.8rem; column-count: 2; column-gap: 1.5rem; }
+    .chapter-list li { font-family: var(--font-ui); font-size: 0.8rem; color: #555; list-style: none; padding: 0.15rem 0; margin-bottom: 0.2rem; border-bottom: 1px solid var(--rule); break-inside: avoid; }
+    .book-stats-cell { grid-area: stats; padding: 1.3rem 1.4rem; background: var(--page-dk); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.2rem; align-content: start; border-top: 1px solid var(--rule); }
+    .stats-heading { grid-column: 1 / -1; margin-bottom: 0.1rem; font-family: var(--font-ui); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green); border-bottom: 2px solid var(--green); padding-bottom: 0.4rem; }
+    .stat-item { display: flex; flex-direction: column; gap: 0.1rem; }
+    .stat-value { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--green); line-height: 1; }
+    .stat-label { font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.08em; color: #666; text-transform: uppercase; }
+    .stat-divider { display: none; }
+    .buy-btn { display: inline-block; margin-top: auto; padding: 0.65rem 1.1rem; background: var(--green); color: var(--white); font-family: var(--font-ui); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 3px; text-align: center; transition: background 0.2s; }
+    .buy-btn:hover { background: var(--green-lt); }
+    /* E-BOOK ISBN + BUY NOW (book stats) */
+    .stat-wide { grid-column: 1 / -1; }
+    /* Release + ISBN join the 2-column grid so ISBN lines up with Words/Genre below it */
+    .stat-pair { display: contents; }
+    .book-stats-cell { grid-template-columns: minmax(0, 1fr) max-content; }
+    .stat-pair .stat-value { font-size: 1.05rem; white-space: nowrap; }
+    .stat-small { font-size: 1.05rem; white-space: nowrap; }
+    .stat-isbn { font-size: 1.05rem; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .stat-buy { grid-column: 1 / -1; margin-top: 0.3rem; }
+    .stat-buy.is-pending { background: transparent; color: var(--green); border: 1px dashed var(--green); cursor: default; pointer-events: none; }
+    .stat-buy:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+    /* E-BOOK + PAPERBACK buttons side by side */
+    .buy-pair { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.3rem; }
+    .buy-pair .stat-buy { grid-column: auto; margin-top: 0; padding: 0.6rem 0.4rem; line-height: 1.4; }
+
+    /* BAND */
+    .band { background: var(--green); color: var(--page); padding: 2.4rem 2rem; text-align: center; }
+    .band-text { font-family: var(--font-display); font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--mist); }
+    .band-attr { font-family: var(--font-ui); font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber-lt); margin-top: 0.6rem; }
+
+    /* SECTIONS */
+    .grid-section { padding: 3.5rem 2rem; border-top: 1px solid var(--rule); }
+    .grid-section:nth-of-type(even) { background: var(--page-dk); }
+    .section-wrap { max-width: 1120px; margin: 0 auto; }
+    .section-label { font-family: var(--font-ui); font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--green); margin-bottom: 0.5rem; }
+    .section-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.6rem; }
+    .section-rule { width: 44px; height: 2px; background: var(--amber); margin-bottom: 1.6rem; }
+    .section-body { font-size: 0.96rem; color: #333; line-height: 1.85; max-width: 680px; }
+
+    /* VIDEO */
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; margin-top: 1.8rem; }
+    .video-card { background: var(--ink); border-radius: 4px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; color: rgba(246,241,231,0.4); font-family: var(--font-ui); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; border: 2px dashed rgba(246,241,231,0.1); text-align: center; padding: 1rem; }
+
+
+    /* SCREENPLAY MEDIUM */
+    .medium-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; margin-top: 2rem; }
+    .medium-box { position: relative; aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden; border: 1px solid var(--rule); background: var(--white); box-shadow: 0 2px 16px rgba(42,92,36,0.07); }
+    .script-box { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%; padding: 1.5rem; background: var(--white) repeating-linear-gradient(0deg, transparent 0 27px, rgba(42,92,36,0.06) 27px 28px); color: var(--ink); text-decoration: none; cursor: pointer; border: none; font: inherit; transition: box-shadow 0.25s, transform 0.25s; }
+    .script-box:hover, .script-box:focus-visible { box-shadow: inset 0 0 0 3px var(--amber); outline: none; }
+    .script-box:hover .script-cta { background: var(--green-lt); }
+    .script-brad { position: absolute; left: 14px; width: 14px; height: 14px; border-radius: 50%; background: var(--amber); box-shadow: inset 0 -2px 3px rgba(0,0,0,0.35); }
+    .script-brad.top { top: 22%; } .script-brad.bot { bottom: 22%; }
+    .script-page { font-family: 'Courier Prime', 'Courier New', Courier, monospace; line-height: 1.9; }
+    .script-page .sp-title { font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.02em; }
+    .script-page .sp-by { font-size: 0.85rem; margin-top: 0.7rem; }
+    .script-page .sp-author { font-size: 0.95rem; }
+    .script-cta { display: inline-block; margin-top: 1.4rem; padding: 0.6rem 1.1rem; background: var(--green); color: var(--white); font-family: var(--font-ui); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 3px; transition: background 0.2s; }
+    .script-note { margin-top: 0.7rem; font-family: var(--font-ui); font-size: 0.72rem; color: #666; }
+    .script-status { display: inline-block; margin-top: 0.6rem; padding: 0.25rem 0.7rem; border: 1px solid var(--green); border-radius: 999px; font-family: var(--font-ui); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); }
+    .script-status.wip { border-color: var(--amber); color: var(--amber); }
+    .trailer-box { background: var(--ink); }
+    .script-box.is-soon { cursor: default; }
+    .script-box.is-soon:hover { box-shadow: none; }
+    .trailer-video video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
+    .soon-box { display: flex; align-items: center; justify-content: center; }
+    .soon-text { font-family: var(--font-display); font-style: italic; font-size: clamp(1.4rem, 3vw, 2rem); color: var(--amber-lt); letter-spacing: 0.04em; }
+    .trailer-still img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Scar time lapse: 30s = 24 hours. 0% noon · 25% 6pm · 50% midnight · 75% 6am · 100% noon */
+    .trailer-still img, .trailer-still .tl-tint, .trailer-still .tl-moon, .trailer-still .tl-moonglow { animation-duration: 30s; animation-timing-function: linear; animation-iteration-count: infinite; }
+    .trailer-still img { animation-name: tl-photo; }
+    .trailer-still .tl-tint { position: absolute; inset: 0; mix-blend-mode: multiply; animation-name: tl-tint; pointer-events: none; }
+    .trailer-still .tl-moonglow { position: absolute; inset: 0; background: radial-gradient(circle at 14% 24%, rgba(220,232,255,0.55), rgba(220,232,255,0) 32%); mix-blend-mode: screen; opacity: 0; animation-name: tl-moonglow; pointer-events: none; }
+    .trailer-still .tl-moon { position: absolute; left: 14%; top: 24%; width: 4.2%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 38% 36%, #fffef6 0%, #f3f1e4 45%, #d9d6c4 100%);
+      box-shadow: 0 0 14px 4px rgba(235,242,255,0.75), 0 0 46px 16px rgba(200,215,255,0.35); opacity: 0; animation-name: tl-moon; pointer-events: none; }
+    .trailer-still .trailer-caption { z-index: 2; }
+    @keyframes tl-photo {
+      0%, 20%  { filter: none; }
+      26%      { filter: brightness(0.9) saturate(1.25) sepia(0.35); }
+      31%      { filter: brightness(0.5) saturate(0.8) sepia(0.2); }
+      36%, 64% { filter: brightness(0.32) saturate(0.45); }
+      69%      { filter: brightness(0.55) saturate(0.8) sepia(0.2); }
+      74%      { filter: brightness(0.9) saturate(1.15) sepia(0.3); }
+      80%, 100% { filter: none; }
+    }
+    @keyframes tl-tint {
+      0%, 20%  { background-color: rgba(255,255,255,0); }
+      26%      { background-color: rgba(255,150,80,0.35); }
+      31%      { background-color: rgba(150,90,140,0.45); }
+      36%, 64% { background-color: rgba(60,90,170,0.55); }
+      69%      { background-color: rgba(170,110,150,0.4); }
+      74%      { background-color: rgba(255,185,120,0.3); }
+      80%, 100% { background-color: rgba(255,255,255,0); }
+    }
+    @keyframes tl-moon {
+      0%, 31%  { opacity: 0; transform: translate(-50%, 40%); }
+      36%      { opacity: 1; transform: translate(-50%, 0%); }
+      50%      { opacity: 1; transform: translate(-50%, -50%); }
+      64%      { opacity: 1; transform: translate(-50%, 0%); }
+      69%, 100% { opacity: 0; transform: translate(-50%, 40%); }
+    }
+    @keyframes tl-moonglow { 0%, 31% { opacity: 0; } 37%, 63% { opacity: 1; } 69%, 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .trailer-still img, .trailer-still .tl-tint, .trailer-still .tl-moon, .trailer-still .tl-moonglow { animation: none; } }
+    .trailer-box svg { width: 100%; height: 100%; display: block; }
+    .trailer-box .star-field { transform-origin: 600px 140px; transform-box: view-box; animation: sky-turn 240s linear infinite; }
+    @keyframes sky-turn { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } } /* facing north, the sky turns counterclockwise */
+    .trailer-box .const-line { fill: none; stroke: #dfa050; stroke-opacity: 0.45; stroke-width: 1.2; stroke-linejoin: round; stroke-linecap: round; }
+    .trailer-box .const-star { fill: #fff8e1; }
+    .trailer-box .tw { animation: twinkle 3.6s ease-in-out infinite alternate; }
+    @keyframes twinkle { from { opacity: 0.35; } to { opacity: 1; } }
+    .trailer-box .meteor { animation: shoot 10s linear infinite; }
+    @keyframes shoot {
+      0%    { transform: translate(0, 0); opacity: 0; }
+      1%    { opacity: 1; }
+      12%   { transform: translate(-520px, 300px); opacity: 0; }
+      100%  { transform: translate(-520px, 300px); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) { .trailer-box .star-field, .trailer-box .tw, .trailer-box .meteor { animation: none; } }
+    .trailer-caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 1rem; text-align: center; background: linear-gradient(to top, rgba(15,26,16,0.85), rgba(15,26,16,0)); color: var(--page); font-family: var(--font-display); font-style: italic; font-size: clamp(1.1rem, 2.2vw, 1.5rem); letter-spacing: 0.04em; }
+    .trailer-caption .dots::after { content: '...'; animation: ellipsis 2.4s steps(4, end) infinite; display: inline-block; width: 1.4em; text-align: left; }
+    @keyframes ellipsis { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+    @media (prefers-reduced-motion: reduce) { .trailer-caption .dots::after { animation: none; } }
+
+    /* SCAR SCENE — beach & lighthouse. Colors are set per time-of-day phase via data-phase (set by script). */
+    @keyframes beam-sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes wave-drift { from { transform: translateX(0); } to { transform: translateX(-80px); } }
+
+    /* PDF VIEWER OVERLAY */
+    .pdf-modal { position: fixed; inset: 0; z-index: 1000; background: rgba(15,26,16,0.92); display: none; flex-direction: column; }
+    .pdf-modal.open { display: flex; }
+    .pdf-modal-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.7rem 1rem 0.7rem 1.4rem; background: var(--green); color: var(--page); flex-shrink: 0; }
+    .pdf-modal-title { font-family: var(--font-display); font-style: italic; font-size: 1rem; color: var(--amber-lt); }
+    .pdf-modal-actions { display: flex; align-items: center; gap: 0.8rem; }
+    .pdf-open-tab { font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,241,231,0.85); text-decoration: none; border-bottom: 1px solid rgba(246,241,231,0.35); }
+    .pdf-open-tab:hover { color: var(--amber-lt); }
+    .pdf-close { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--amber-lt); background: transparent; color: var(--amber-lt); font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s; }
+    .pdf-close:hover, .pdf-close:focus-visible { background: var(--amber-lt); color: var(--ink); outline: none; }
+    .pdf-pages { flex: 1; overflow-y: scroll; overflow-x: hidden; -webkit-overflow-scrolling: touch; background: #3a3f3a; padding: 1.2rem 0 2rem; scrollbar-gutter: stable; }
+    .pdf-pages::-webkit-scrollbar { width: 14px; }
+    .pdf-pages::-webkit-scrollbar-track { background: #2b2f2b; }
+    .pdf-pages::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 7px; border: 3px solid #2b2f2b; }
+    .pdf-pages { scrollbar-color: var(--amber) #2b2f2b; scrollbar-width: auto; }
+    .pdf-page { display: block; width: min(92vw, 820px); height: auto; margin: 0 auto 1.2rem; box-shadow: 0 6px 24px rgba(0,0,0,0.45); background: #fff; pointer-events: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .pdf-page-num { width: min(92vw, 820px); margin: -0.6rem auto 1.4rem; text-align: right; font-family: var(--font-ui); font-size: 0.7rem; letter-spacing: 0.1em; color: rgba(246,241,231,0.5); }
+    .pdf-pages, .pdf-modal-bar { user-select: none; -webkit-user-select: none; }
+    body.modal-open { overflow: hidden; }
+    @media (max-width: 760px) { .medium-grid { grid-template-columns: 1fr; } }
+
+    /* AUTHOR */
+    .author-grid { display: grid; grid-template-columns: 160px 1fr; gap: 2.4rem; align-items: flex-start; max-width: 920px; margin-top: 1.4rem; }
+    .author-avatar { width: 160px; height: 160px; border-radius: 50%; border: 3px solid var(--green); background: var(--page-dk); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2.5rem; color: var(--amber); flex-shrink: 0; overflow: hidden; }
+    .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* CONTACT */
+    .contact-list { list-style: none; margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; }
+    .contact-list li { font-family: var(--font-ui); font-size: 0.9rem; }
+    .contact-list a { color: var(--green); text-decoration: none; border-bottom: 1px solid var(--rule); }
+    .contact-list a:hover { border-color: var(--green); }
+
+    /* NEXT BOOK */
+    .next-card { margin-top: 1.6rem; padding: 2rem; background: var(--green); color: var(--page); border-radius: 5px; max-width: 680px; }
+    .next-eyebrow { font-family: var(--font-ui); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mist); margin-bottom: 0.5rem; }
+    .next-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--amber-lt); line-height: 1.1; margin-bottom: 0.7rem; }
+    .next-card p { font-size: 0.93rem; color: rgba(246,241,231,0.85); line-height: 1.75; }
+
+    /* ART */
+    .art-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.6rem; }
+    .art-card { aspect-ratio: 5/7; border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); background: var(--ink); display: flex; align-items: center; justify-content: center; color: #aaa; font-family: var(--font-ui); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; padding: 0; }
+    .art-card img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+
+    /* FOOTER */
+    footer { background: var(--ink); color: rgba(246,241,231,0.55); padding: 2rem; text-align: center; }
+    .footer-brand { font-family: var(--font-display); font-size: 1.1rem; font-style: italic; color: var(--amber-lt); margin-bottom: 0.5rem; }
+    .footer-nav { display: flex; justify-content: center; gap: 1.8rem; list-style: none; flex-wrap: wrap; margin-bottom: 1rem; }
+    .footer-nav a { font-family: var(--font-ui); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,241,231,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-nav a:hover { color: var(--amber-lt); }
+    .footer-copy { font-family: var(--font-ui); font-size: 0.75rem; color: rgba(246,241,231,0.3); }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .book-row { grid-template-columns: 1fr; grid-template-rows: auto auto auto; grid-template-areas: "cover" "synopsis" "stats"; }
+      .book-cover-cell img { max-height: 460px; width: auto; margin: 0 auto; }
+      .book-synopsis-cell { align-self: stretch; border-left: none; border-right: none; border-top: 1px solid var(--rule); }
+      .book-stats-cell { border-top: 1px solid var(--rule); }
+      .author-grid { grid-template-columns: 1fr; }
+      .author-avatar { margin: 0 auto; }
+      nav { padding: 0.8rem 1.2rem; }
+      .nav-links { gap: 1rem; }
+    }
+    @media (max-width: 560px) {
+      .masthead { padding: 3rem 1.2rem 2.5rem; }
+      .books-area { padding: 2.5rem 1rem 1rem; }
+      .chapter-list { column-count: 1; }
+      .grid-section { padding: 2.5rem 1.2rem; }
+    }
+    .buy-section {
+  background: #1a2e1a;
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top: 1px solid #4a6741;
+}
+.buy-section .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c8953a;
+  margin: 0 0 0.75rem;
+}
+.buy-section h2 {
+  font-size: 28px;
+  font-weight: 400;
+  color: #e8dfc8;
+  margin: 0 0 0.5rem;
+}
+.buy-section .subtitle {
+  font-size: 15px;
+  color: #8aaa7a;
+  margin: 0 0 2.5rem;
+  font-style: italic;
+}
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+.book-card {
+  background: #0f1f0f;
+  border: 1px solid #3a5732;
+  border-radius: 8px;
+  padding: 1.25rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.book-number { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #6a8a5a; }
+.buy-book-title { font-size: 20px; font-weight: 400; color: #e8dfc8; margin: 0; }
+.btn-row     { display: flex; gap: 8px; margin-top: 0.75rem; width: 100%; }
+.btn         { flex: 1; padding: 8px 6px; border-radius: 5px; font-size: 12px; font-weight: 600;
+               text-decoration: none; text-align: center; transition: opacity 0.15s; }
+.btn:hover   { opacity: 0.85; }
+.btn-gumroad { background: #e8853a; color: #fff; }
+.btn-payhip  { background: #2d5a3d; color: #b8d4a8; border: 1px solid #4a7a5a; }
+.platform-note { font-size: 12px; color: #6a8a5a; font-style: italic; }
+.firefly-row { display: flex; justify-content: center; gap: 18px; margin-bottom: 1.5rem; opacity: 0.6; }
+.ff          { width: 4px; height: 4px; border-radius: 50%; background: #c8953a;
+               animation: pulse 2.4s ease-in-out infinite; }
+.ff:nth-child(2) { animation-delay: 0.8s; }
+.ff:nth-child(3) { animation-delay: 1.6s; }
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.4); }
+}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand">The Acres Series</a>
+  <ul class="nav-links">
+    <li><a href="#acres">Acres</a></li>
+    <li><a href="#scar">Scar</a></li>
+    <li><a href="#arc">Arc</a></li>
+    <li style="display:none"><a href="#video-drops">Film</a></li>
+    <li><a href="#screenplay">Screenplay</a></li>
+    <li><a href="#author">Author</a></li>
+    <li style="display:none"><a href="#contact">Contact</a></li><!-- TEMP: Contact hidden -->
+  </ul>
+</nav>
+
+<header class="masthead">
+  <!-- falling keepsakes (decorative): pocket watch, Play Ball card, medallion, cap, hair clip, pennies, pocket watch, book -->
+  <div class="leaf-layer" aria-hidden="true">
+    <div class="leaf fall-1" data-x="8" style="width:59px"><svg viewBox="-24 -24 48 48"><circle cx="0" cy="5" r="14"/><circle cx="0" cy="5" r="11" class="vein"/><rect x="-2.5" y="-13" width="5" height="4" rx="1"/><circle cx="0" cy="-16.5" r="3.5"/><path d="M0 5 L0 -2.5 M0 5 L5 8"/><path class="vein" d="M0 -5.5 L0 -4 M0 14 L0 15.5 M-10.5 5 L-9 5 M9 5 L10.5 5"/></svg></div>
+    <div class="leaf fall-2" data-x="26" style="width:53px"><svg viewBox="-24 -24 48 48"><rect x="-12" y="-17" width="24" height="34" rx="2"/><rect class="vein" x="-9" y="-14" width="18" height="21" rx="1"/><circle cx="0" cy="-4" r="5.5"/><path class="vein" d="M-3 -8.5 C-1.5 -6 -1.5 -2 -3 0.5 M3 -8.5 C1.5 -6 1.5 -2 3 0.5"/><text x="0" y="13.5" text-anchor="middle" font-size="3.3" font-family="Georgia, serif" font-weight="700" letter-spacing="0" fill="currentColor" stroke="none">PLAY BALL</text></svg></div>
+    <div class="leaf fall-3" data-x="47" style="width:56px"><svg viewBox="-24 -24 48 48"><path d="M-9 -21 L-2 -21 L2 -8 L-3 -6 Z M9 -21 L2 -21 L-2 -8 L3 -6 Z"/><circle cx="0" cy="5" r="11"/><circle cx="0" cy="5" r="8" class="vein"/><path d="M0 -0.5 L1.6 3.3 L5.6 3.6 L2.5 6.2 L3.5 10.2 L0 8 L-3.5 10.2 L-2.5 6.2 L-5.6 3.6 L-1.6 3.3 Z"/></svg></div>
+    <div class="leaf fall-4" data-x="70" style="width:67px"><svg viewBox="-24 -24 48 48"><path d="M-14 5 C-14 -12 12 -12 14 5 Z"/><path d="M14 5 C20 5 24 7 24 10 C16 11 0 10 -14 8 L-14 5 Z"/><circle cx="0" cy="-7.5" r="1.6"/><path class="vein" d="M0 -6 C-3 -1 -3 2 -3 5 M0 -6 C5 -2 6 1 6 5"/></svg></div>
+    <div class="leaf fall-5" data-x="88" style="width:67px"><svg viewBox="-24 -24 48 48"><rect x="-18" y="-5" width="36" height="10" rx="5"/><rect class="vein" x="-13" y="-2" width="24" height="4" rx="2"/><circle cx="14" cy="0" r="1.6"/><path class="vein" d="M-18 0 L-21 0"/></svg></div>
+    <div class="leaf fall-6" data-x="18" style="width:62px"><svg viewBox="-24 -24 48 48"><circle cx="-8" cy="6" r="8"/><circle cx="-8" cy="6" r="5.5" class="vein"/><circle cx="8" cy="6" r="8"/><circle cx="8" cy="6" r="5.5" class="vein"/><circle cx="0" cy="-8" r="8"/><circle cx="0" cy="-8" r="5.5" class="vein"/></svg></div>
+    <div class="leaf fall-7" data-x="58" style="width:59px"><svg viewBox="-24 -24 48 48"><circle cx="0" cy="5" r="14"/><circle cx="0" cy="5" r="11" class="vein"/><rect x="-2.5" y="-13" width="5" height="4" rx="1"/><circle cx="0" cy="-16.5" r="3.5"/><path d="M0 5 L0 -2.5 M0 5 L5 8"/><path class="vein" d="M0 -5.5 L0 -4 M0 14 L0 15.5 M-10.5 5 L-9 5 M9 5 L10.5 5"/></svg></div>
+    <div class="leaf fall-8" data-x="38" style="width:56px"><svg viewBox="-24 -24 48 48"><path d="M-12 -15 L10 -15 L10 14 L-12 14 Z"/><path d="M-12 14 L-10 17 L12 17 L12 -12 L10 -15"/><path d="M-8.5 -15 L-8.5 14"/><path class="vein" d="M-5 -9 L6 -9 M-5 -6 L4 -6 M-5 10 L6 10"/></svg></div>
+    <div class="leaf leaf-gust"><svg viewBox="-16 -24 32 52"><path d="M0 20 C-4 20 -8 18 -7 14 C-12 15 -14 10 -10 7 C-15 6 -15 0 -10 -1 C-14 -4 -13 -10 -8 -9 C-10 -14 -6 -18 -3 -15 C-3 -20 0 -22 0 -22 C0 -22 3 -20 3 -15 C6 -18 10 -14 8 -9 C13 -10 14 -4 10 -1 C15 0 15 6 10 7 C14 10 12 15 7 14 C8 18 4 20 0 20 Z"/><path class="vein" d="M0 27 L0 -18 M0 11 L-7 6 M0 11 L7 6 M0 1 L-9 -2 M0 1 L9 -2 M0 -8 L-5 -11 M0 -8 L5 -11"/></svg></div>
+  </div>
+  <p class="masthead-eyebrow"></p>
+  <h1 class="masthead-title">The <span>Acres</span> Series</h1>
+  <p class="masthead-sub">~ A Mind-Traveler in a Modern World ~</p>
+  <div class="masthead-rule"></div>
+</header>
+
+<main class="books-area">
+
+  <!-- BOOK 1: ACRES -->
+  <div class="book-row" id="acres">
+    <div class="book-cover-cell">
+      <div class="book-num-badge">1</div>
+      <img src="acres-cover.jpg" alt="Acres book cover"/>
+    </div>
+    <div class="book-synopsis-cell">
+      <p class="book-label">Book One &middot; The Acres Series</p>
+      <h2 class="book-title">Acres</h2>
+      <p class="book-setting">&#128205; Gettysburg, Pennsylvania</p>
+      <p class="book-synopsis">
+        On the acres of Gettysburg is Alicia Averys - a mind-traveler who can see the world through another’s eyes. From a pocketknife to a rookie card, Alicia can travel through time to witness her family’s past and the events of the American Civil war.
+        <br><br>
+        Alicia’s smile, a declared 10, fades as her final day of the school year is interrupted by vandals who had too much fun redecorating the school. While her classmates gossip about who did what and why, Alicia investigates the crime by traveling into the minds of the vandals. Can she figure out the vandals’ identities? Is it safe to tell anyone that she can go back in time to investigate crimes?
+        <br><br>
+      </p>
+      <details class="book-chapters">
+        <summary>Chapter List</summary>
+        <ul class="chapter-list">
+          <li>Ch. 1 &mdash; Creekside</li>
+          <li>Ch. 2 &mdash; Wheels on the Bus</li>
+          <li>Ch. 3 &mdash; The Sandlots</li>
+          <li>Ch. 4 &mdash; Traditions Never Die</li>
+          <li>Ch. 5 &mdash; Sunday Blues</li>
+          <li>Ch. 6 &mdash; From Behind The Blinds</li>
+          <li>Ch. 7 &mdash; Trick or Treat</li>
+          <li>Ch. 8 &mdash; Seeing The Play With Eyes Closed</li>
+          <li>Ch. 9 &mdash; A Friend To The Rescue</li>
+          <li>Ch. 10 &mdash; In Honor of Stone Houses</li>
+          <li>Ch. 11 &mdash; Ready to Party</li>
+          <li>Ch. 12 &mdash; The Final At Bat</li>
+        </ul>
+      </details>
+    </div>
+    <div class="book-stats-cell">
+      <p class="stats-heading">Book Stats</p>
+      <!-- Left column: Release / Chapters / Words  ·  Right column: E-Book ISBN / Paperback ISBN / Genre -->
+      <div class="stat-item"><span class="stat-value stat-small">Summer 2026</span><span class="stat-label">E-Book Release</span></div>
+      <div class="stat-item"><span class="stat-value stat-isbn">979-8-9966660-0-3</span><span class="stat-label">E-Book ISBN</span></div>
+      <div class="stat-item"><span class="stat-value">12</span><span class="stat-label">Chapters</span></div>
+      <div class="stat-item"><span class="stat-value stat-isbn">979-8-9966660-3-4</span><span class="stat-label">Paperback ISBN</span></div>
+      <div class="stat-item"><span class="stat-value">~48,000</span><span class="stat-label">Words</span></div>
+      <div class="stat-item"><span class="stat-value">MG / YA</span><span class="stat-label">Genre</span></div>
+      <div class="buy-pair">
+        <a class="buy-btn stat-buy" href="https://books2read.com/u/3LWXV5" data-book="Acres" data-format="E-Book" target="_blank" rel="noopener" aria-label="Buy the Acres e-book">Buy Now<br>E-Book</a>
+        <!-- PAPERBACK: paste the IngramSpark link for Acres inside href="" below -->
+        <a class="buy-btn stat-buy" href="" data-book="Acres" data-format="Paperback" target="_blank" rel="noopener" aria-label="Buy the Acres paperback">Buy Now<br>Paperback</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOK 2: SCAR -->
+  <div class="book-row" id="scar">
+    <div class="book-cover-cell">
+      <div class="book-num-badge">2</div>
+      <img src="scar-cover.jpg" alt="Scar book cover"/>
+    </div>
+    <div class="book-synopsis-cell">
+      <p class="book-label">Book Two &middot; The Acres Series</p>
+      <h2 class="book-title">Scar</h2>
+      <p class="book-setting">&#128205; Savannah, Georgia</p>
+      <p class="book-synopsis">
+        Southern comfort and hospitality will have to wait as Alicia Averys and her cousin Daphne investigate mysteries in Savannah, Georgia - one of America’s most haunted cities.
+        <br><br>
+        On the edge of the water, just past Bay Street, is the Riverfront Exchange. A building where people can shop, wander and allegedly dine with the deceased crew of the shipwrecked Three-Fourteen. With Alicia’s mind-traveling ability, the two ladies will investigate if the rumors are true and whether the sailors are friend or foe. In the course of the investigation, they will find an unexpected guest who calls Daphne’s new residence home sweet home.
+        <br><br>
+      </p>
+      <details class="book-chapters">
+        <summary>Chapter List</summary>
+        <ul class="chapter-list">
+          <li>Ch. 1 &mdash; A Long Trip</li>
+          <li>Ch. 2 &mdash; Cousins &amp; Timber</li>
+          <li>Ch. 3 &mdash; A Dinner Date</li>
+          <li>Ch. 4 &mdash; Easy Living</li>
+          <li>Ch. 5 &mdash; Ask or Wonder</li>
+          <li>Ch. 6 &mdash; Archives</li>
+          <li>Ch. 7 &mdash; Splinters</li>
+          <li>Ch. 8 &mdash; Daisy</li>
+          <li>Ch. 9 &mdash; Binding Two Into One</li>
+          <li>Ch. 10 &mdash; One Last Chance</li>
+          <li>Ch. 11 &mdash; Behind Red Walls</li>
+          <li>Ch. 12 &mdash; All Hands On Deck</li>
+          <li>Ch. 13 &mdash; Two Of A Kind</li>
+        </ul>
+      </details>
+    </div>
+    <div class="book-stats-cell">
+      <p class="stats-heading">Book Stats</p>
+      <!-- Left column: Release / Chapters / Words  ·  Right column: E-Book ISBN / Paperback ISBN / Genre -->
+      <div class="stat-item"><span class="stat-value stat-small">Summer 2026</span><span class="stat-label">E-Book Release</span></div>
+      <div class="stat-item"><span class="stat-value stat-isbn">979-8-9966660-1-0</span><span class="stat-label">E-Book ISBN</span></div>
+      <div class="stat-item"><span class="stat-value">13</span><span class="stat-label">Chapters</span></div>
+      <div class="stat-item"><span class="stat-value stat-isbn">979-8-9966660-4-1</span><span class="stat-label">Paperback ISBN</span></div>
+      <div class="stat-item"><span class="stat-value">~48,000</span><span class="stat-label">Words</span></div>
+      <div class="stat-item"><span class="stat-value">MG / YA</span><span class="stat-label">Genre</span></div>
+      <div class="buy-pair">
+        <a class="buy-btn stat-buy" href="https://books2read.com/u/4NMKKo" data-book="Scar" data-format="E-Book" target="_blank" rel="noopener" aria-label="Buy the Scar e-book">Buy Now<br>E-Book</a>
+        <!-- PAPERBACK: paste the IngramSpark link for Scar inside href="" below -->
+        <a class="buy-btn stat-buy" href="" data-book="Scar" data-format="Paperback" target="_blank" rel="noopener" aria-label="Buy the Scar paperback">Buy Now<br>Paperback</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOK 3: ARC -->
+  <div class="book-row" id="arc">
+    <div class="book-cover-cell">
+      <div class="book-num-badge">3</div>
+      <img src="arc-cover.jpg" alt="Arc book cover"/>
+    </div>
+    <div class="book-synopsis-cell">
+      <p class="book-label">Book Three &middot; The Acres Series</p>
+      <h2 class="book-title">Arc</h2>
+      <p class="book-setting">&#128205; Gettysburg, Pennsylvania</p>
+      <p class="book-synopsis">
+        With two weeks to the 4th of July, Alicia Averys returns to the acres of Gettysburg where her mind-traveling ability takes her through firefly fields and on a quest to explore a hidden secret on the acres.
+        <br><br>
+        While her family questions how a cavern lay under the acres without anyone knowing, Alicia follows the path of her two cousins, Abigail and Russell, who explored the cavern more than a hundred years in the past. Alicia can’t change the fate of her cousins, but she can learn why only one cousin walked out of the cavern alive. 
+        <br><br>
+      </p>
+      <details class="book-chapters">
+        <summary>Chapter List</summary>
+        <ul class="chapter-list">
+          <li>Ch. 1 &mdash; Back to Home</li>
+          <li>Ch. 2 &mdash; An Uneventful Day</li>
+          <li>Ch. 3 &mdash; A Change of Plans</li>
+          <li>Ch. 4 &mdash; Skip to Town</li>
+          <li>Ch. 5 &mdash; A Long Night and New Day</li>
+          <li>Ch. 6 &mdash; Tie-Dye Bracelet</li>
+          <li>Ch. 7 &mdash; Into the Ground</li>
+          <li>Ch. 8 &mdash; Parade</li>
+          <li>Ch. 9 &mdash; New Plan</li>
+          <li>Ch. 10 &mdash; July 2nd</li>
+          <li>Ch. 11 &mdash; A Window View Into The Past</li>
+          <li>Ch. 12 &mdash; Independence Day</li>
+        </ul>
+      </details>
+    </div>
+    <div class="book-stats-cell">
+      <p class="stats-heading">Book Stats</p>
+      <!-- Left column: Release / Chapters / Words  ·  Right column: E-Book ISBN / Paperback ISBN / Genre -->
+      <div class="stat-item"><span class="stat-value stat-small">Summer 2026</span><span class="stat-label">E-Book Release</span></div>
+      <div class="stat-item"><span class="stat-value stat-isbn">979-8-9966660-2-7</span><span class="stat-label">E-Book ISBN</span></div>
+      <div class="stat-item"><span class="stat-value">12</span><span class="stat-label">Chapters</span></div>
+      <div class="stat-item"><span class="stat-value stat-isbn">979-8-9966660-5-8</span><span class="stat-label">Paperback ISBN</span></div>
+      <div class="stat-item"><span class="stat-value">~43,000</span><span class="stat-label">Words</span></div>
+      <div class="stat-item"><span class="stat-value">MG / YA</span><span class="stat-label">Genre</span></div>
+      <div class="buy-pair">
+        <a class="buy-btn stat-buy" href="https://books2read.com/u/mlDw2W" data-book="Arc" data-format="E-Book" target="_blank" rel="noopener" aria-label="Buy the Arc e-book">Buy Now<br>E-Book</a>
+        <!-- PAPERBACK: paste the IngramSpark link for Arc inside href="" below -->
+        <a class="buy-btn stat-buy" href="" data-book="Arc" data-format="Paperback" target="_blank" rel="noopener" aria-label="Buy the Arc paperback">Buy Now<br>Paperback</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="band">
+  <p class="band-text">"Mind-traveling can be so boring sometimes. At least the acres look nice. The oak trees are huge! Wonder if the squirrels back then were still red, white, black or gray. I wish I could see a red one again."</p>
+  <p class="band-attr">&mdash; Alicia Averys</p>
+</div>
+
+<!-- SCREENPLAY.- DROPS -->
+<section class="grid-section" id="video-drops" style="display:none">
+  <div class="section-wrap">
+    <p class="section-label">Coming Soon</p>
+    <h2 class="section-title">The Acres Series Screenplays</h2>
+    <div class="section-rule"></div>
+    <p class="section-body">With <a href="https://www.writerduet.com" target="_blank" rel="noopener">WriterDuet</a> software, I am making each story into a screenplay.</p>
+    <div class="video-grid">
+      <div class="video-card">Acres &mdash; 95% Draft Complete</div>
+      <div class="video-card">Scar &mdash; 45% Draft Complete</div>
+      <div class="video-card">Arc &mdash; 0.1% Draft Complete</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENPLAY MEDIUM -->
+<section class="grid-section" id="screenplay">
+  <div class="section-wrap">
+    <p class="section-label">From Page to Screen</p>
+    <h2 class="section-title">Screenplay Medium</h2>
+    <div class="section-rule"></div>
+    <p class="section-body">Utilizing the <a href="https://www.writerduet.com" target="_blank" rel="noopener">WriterDuet</a> software program, the Acres and Scar novels were crafted into screenplays, with Arc in the on deck circle.</p>
+
+    <div class="medium-grid">
+
+      <!-- BOX 1: Screenplay PDF -->
+      <div class="medium-box">
+        <button type="button" class="script-box" id="open-screenplay" aria-haspopup="dialog" aria-controls="pdf-modal">
+          <span class="script-brad top" aria-hidden="true"></span>
+          <span class="script-brad bot" aria-hidden="true"></span>
+          <span class="script-page">
+            <span class="sp-title" style="display:block">Acres</span>
+            <span class="sp-by" style="display:block">written by</span>
+            <span class="sp-author" style="display:block">Shane Quaker</span>
+          </span>
+          <span class="script-cta">Read the First Ten Pages</span>
+          <span class="script-note">Opens in a scrolling viewer window</span>
+          <span class="script-status">Complete</span>
+        </button>
+      </div>
+
+      <!-- BOX 2: Acres trailer placeholder — looping video (acres-hallway.mp4 in the repo root) -->
+      <div class="medium-box trailer-box trailer-video" aria-label="Acres trailer pending">
+        <video src="acres-hallway.mp4" style="object-position: 50% 28%" autoplay muted loop playsinline preload="auto" aria-label="Alicia and a classmate walk a school hallway as a Civil War battlefield storms in beside them"></video>
+        <div class="trailer-caption">Trailer Pending<span class="dots"></span></div>
+      </div>
+
+      <!-- BOX 3: Scar Screenplay PDF -->
+      <div class="medium-box">
+        <button type="button" class="script-box" id="open-scar" aria-haspopup="dialog" aria-controls="pdf-modal-scar">
+          <span class="script-brad top" aria-hidden="true"></span>
+          <span class="script-brad bot" aria-hidden="true"></span>
+          <span class="script-page">
+            <span class="sp-title" style="display:block">Scar</span>
+            <span class="sp-by" style="display:block">written by</span>
+            <span class="sp-author" style="display:block">Shane Quaker</span>
+          </span>
+          <span class="script-cta">Read the First Ten Pages</span>
+          <span class="script-note">Opens in a scrolling viewer window</span>
+          <span class="script-status wip">Work in Progress</span>
+        </button>
+      </div>
+
+      <!-- BOX 4: Scar trailer placeholder — looping video (scar-trailer.mp4 in the repo root) -->
+      <div class="medium-box trailer-box trailer-video" aria-label="Scar trailer pending">
+        <video src="scar-trailer.mp4" style="object-position: 50% 12%" autoplay muted loop playsinline preload="auto" aria-label="Alicia stands on a foggy, rain-slick Savannah street at night as the lighthouse beam sweeps and figures from the past walk by"></video>
+        <div class="trailer-caption">Trailer Pending<span class="dots"></span></div>
+      </div>
+
+      <!-- BOX 5: Arc Screenplay PDF -->
+      <div class="medium-box">
+        <button type="button" class="script-box" id="open-arc" aria-haspopup="dialog" aria-controls="pdf-modal-arc">
+          <span class="script-brad top" aria-hidden="true"></span>
+          <span class="script-brad bot" aria-hidden="true"></span>
+          <span class="script-page">
+            <span class="sp-title" style="display:block">Arc</span>
+            <span class="sp-by" style="display:block">written by</span>
+            <span class="sp-author" style="display:block">Shane Quaker</span>
+          </span>
+          <span class="script-cta">Read the First Ten Pages</span>
+          <span class="script-note">Opens in a scrolling viewer window</span>
+          <span class="script-status wip">Work in Progress</span>
+        </button>
+      </div>
+
+      <!-- BOX 6: Arc trailer placeholder — looping video (arc-trailer.mp4 in the repo root) -->
+      <div class="medium-box trailer-box trailer-video" aria-label="Arc trailer pending">
+        <video src="arc-trailer.mp4" autoplay muted loop playsinline preload="auto" aria-label="Alicia beneath a glowing willow as fireworks burst overhead"></video>
+        <div class="trailer-caption">Trailer Pending<span class="dots"></span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PDF VIEWER WINDOW -->
+<div class="pdf-modal" id="pdf-modal" role="dialog" aria-modal="true" aria-label="Acres screenplay, first ten pages" hidden>
+  <div class="pdf-modal-bar">
+    <span class="pdf-modal-title">Acres &mdash; Screenplay, Pages 1&ndash;10</span>
+    <div class="pdf-modal-actions">
+      <button type="button" class="pdf-close" id="close-screenplay" aria-label="Close viewer">&times;</button>
+    </div>
+  </div>
+  <div class="pdf-pages" id="pdf-pages" tabindex="0"></div>
+</div>
+
+<!-- SCAR PDF VIEWER WINDOW -->
+<div class="pdf-modal" id="pdf-modal-scar" role="dialog" aria-modal="true" aria-label="Scar screenplay, first ten pages" hidden>
+  <div class="pdf-modal-bar">
+    <span class="pdf-modal-title">Scar &mdash; Screenplay, Pages 1&ndash;10</span>
+    <div class="pdf-modal-actions">
+      <button type="button" class="pdf-close" id="close-scar" aria-label="Close viewer">&times;</button>
+    </div>
+  </div>
+  <div class="pdf-pages" id="pdf-pages-scar" tabindex="0"></div>
+</div>
+
+<!-- ARC PDF VIEWER WINDOW -->
+<div class="pdf-modal" id="pdf-modal-arc" role="dialog" aria-modal="true" aria-label="Arc screenplay, first ten pages" hidden>
+  <div class="pdf-modal-bar">
+    <span class="pdf-modal-title">Arc &mdash; Screenplay, Pages 1&ndash;10</span>
+    <div class="pdf-modal-actions">
+      <button type="button" class="pdf-close" id="close-arc" aria-label="Close viewer">&times;</button>
+    </div>
+  </div>
+  <div class="pdf-pages" id="pdf-pages-arc" tabindex="0"></div>
+</div>
+
+<script>
+  (function () {
+    // One viewer setup per screenplay. Each entry: which button opens it, which modal it fills,
+    // and how page images are named in the repo root.
+    var viewers = [
+      {
+        name: 'Acres',
+        modal: 'pdf-modal', pages: 'pdf-pages', open: 'open-screenplay', close: 'close-screenplay',
+        pageCount: 10,                          // script pages 1-10 = page-02.png ... page-11.png (page-01.png, the title page, is not shown)
+        src: function (n) { var f = n + 1; return 'page-' + (f < 10 ? '0' + f : f) + '.png'; }
+      },
+      {
+        name: 'Scar',
+        modal: 'pdf-modal-scar', pages: 'pdf-pages-scar', open: 'open-scar', close: 'close-scar',
+        pageCount: 10,                          // script pages 1-10 = SCAR1.png ... SCAR10.png (SCAR0.png, the title page, is not shown)
+        src: function (n) { return 'SCAR' + n + '.png?v=2'; }   // ?v=2: updated screenplay, makes browsers fetch the new pages
+      },
+      {
+        name: 'Arc',
+        modal: 'pdf-modal-arc', pages: 'pdf-pages-arc', open: 'open-arc', close: 'close-arc',
+        pageCount: 10,                          // script pages 1-10 = ARC1.png ... ARC10.png (the title page is not shown)
+        src: function (n) { return 'ARC' + n + '.png'; }
+      }
+    ];
+
+    viewers.forEach(function (v) {
+      var modal   = document.getElementById(v.modal);
+      var pagesEl = document.getElementById(v.pages);
+      var openBt  = document.getElementById(v.open);
+      var closeBt = document.getElementById(v.close);
+      if (!modal || !pagesEl || !openBt || !closeBt) return;
+      var built = false, lastFocus = null;
+
+      function buildPages () {
+        for (var n = 1; n <= v.pageCount; n++) {
+          var img = document.createElement('img');
+          img.className = 'pdf-page';
+          img.src = v.src(n);
+          img.alt = v.name + ' screenplay, page ' + n + ' of ' + v.pageCount;
+          img.draggable = false;
+          img.loading = n > 2 ? 'lazy' : 'eager';
+          var num = document.createElement('div');
+          num.className = 'pdf-page-num';
+          num.textContent = n + ' / ' + v.pageCount;
+          pagesEl.appendChild(img); pagesEl.appendChild(num);
+        }
+        built = true;
+      }
+      function openViewer () {
+        lastFocus = document.activeElement;
+        if (!built) buildPages();
+        modal.hidden = false;
+        modal.classList.add('open');
+        document.body.classList.add('modal-open');
+        pagesEl.scrollTop = 0;
+        pagesEl.focus();
+      }
+      function closeViewer () {
+        modal.classList.remove('open');
+        modal.hidden = true;
+        document.body.classList.remove('modal-open');
+        if (lastFocus) lastFocus.focus();
+      }
+      openBt.addEventListener('click', openViewer);
+      closeBt.addEventListener('click', closeViewer);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('open')) closeViewer(); });
+      // Discourage saving: no context menu or drag inside the viewer
+      modal.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+      modal.addEventListener('dragstart',  function (e) { e.preventDefault(); });
+    });
+  })();
+</script>
+
+<!-- AUTHOR -->
+<section class="grid-section" id="author">
+  <div class="section-wrap">
+    <p class="section-label">About the Author</p>
+    <h2 class="section-title">Quaker</h2>
+    <div class="section-rule"></div>
+    <div class="author-grid">
+      <div class="author-avatar">SQ</div>
+      <!-- Replace div above with: <img src="author-photo.jpg" alt="Shane Michael Quaker" class="author-avatar"> -->
+      <div>
+        <p class="section-body">
+          <br><br>
+          Shane Quaker is the author of The Acres Series, a YA/upper-middle-grade supernatural trilogy. He writes under the Quaker Press Books imprint, producing fiction works that explore history, mystery and the paranormal.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="grid-section" id="contact" style="display:none"><!-- TEMP: Contact section hidden -->
+  <div class="section-wrap">
+    <p class="section-label">Get in Touch</p>
+    <h2 class="section-title">Contact</h2>
+    <div class="section-rule"></div>
+    <p class="section-body">For reader questions, book club inquiries, or media requests &mdash; reach out via email.</p>
+    <ul class="contact-list">
+      <li>&#128231; Email: <a href="mailto:QuakerPressBooks@gmail.com">QuakerPressBooks@gmail.com</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-brand">The Acres Series</p>
+  <ul class="footer-nav">
+    <li><a href="#acres">Acres</a></li>
+    <li><a href="#scar">Scar</a></li>
+    <li><a href="#arc">Arc</a></li>
+    <li style="display:none"><a href="#video-drops">Film</a></li>
+    <li><a href="#screenplay">Screenplay</a></li>
+    <li><a href="#author">Author</a></li>
+    <li style="display:none"><a href="#contact">Contact</a></li><!-- TEMP: Contact hidden -->
+  </ul>
+  <p class="footer-copy">&copy; 2026 Quaker Press Books &middot; All rights reserved</p>
+</footer>
+<!-- ── WHERE TO BUY ── -->
+<section class="buy-section">
+  <div class="firefly-row" aria-hidden="true">
+    <span class="ff"></span><span class="ff"></span><span class="ff"></span>
+  </div>
+</section>
+<script>
+  /* BUY BUTTONS: each book's store link goes in its href="" above.
+     Until a link is pasted, the button shows "Coming Soon" and can't be clicked. */
+  document.querySelectorAll('.stat-buy').forEach(function (a) {
+    var link = (a.getAttribute('href') || '').trim();
+    if (link.indexOf('https://') !== 0) {
+      a.classList.add('is-pending');
+      a.removeAttribute('href');
+      a.setAttribute('aria-disabled', 'true');
+      var fmt = a.getAttribute('data-format');
+      a.innerHTML = (fmt ? fmt + '<br>' : '') + 'Coming Soon';
+    }
+  });
+</script>
+<script>
+/* masthead: falling keepsakes + a gust object every 15 s.
+   If the gust object hits a falling one, the falling one is knocked away
+   (elastic-ish collision off the gust's path, then spin + gravity), and re-enters from the top. */
+(function () {
+  var head = document.querySelector('.masthead');
+  var layer = head && head.querySelector('.leaf-layer');
+  if (!layer) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var GRAVITY = 900, RESTITUTION = 0.8, CYCLE = 15, GUST_START = 10.2, GUST_TIME = 4.2;
+  var durs = [11, 13, 12, 14, 10.5, 12.5, 13.5, 11.5];
+  var fallers = Array.prototype.map.call(layer.querySelectorAll('.leaf:not(.leaf-gust)'), function (el, i) {
+    return {
+      el: el, w: el.offsetWidth || 56, xPct: +el.dataset.x, dur: durs[i % durs.length],
+      t: (i / 8 + (i % 3) * 0.05) % 1,           /* progress through the fall, staggered so the sky is never empty */
+      sway: 26 + 8 * (i % 3), spin: (35 + 10 * (i % 4)) * (i % 2 ? -1 : 1), ph: i * 0.9,
+      mode: 'fall', x: 0, y: 0, vx: 0, vy: 0, rot: 0, vr: 0
+    };
+  });
+  var gust = { el: layer.querySelector('.leaf-gust'), w: 56, x: -100, y: 0, px: 0, py: 0, active: false, yPct: 0.5 };
+  var icons = fallers.map(function (f) { return f.el.innerHTML; });
+
+  function newGust() {
+    gust.el.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+    gust.yPct = 0.4 + Math.random() * 0.25;
+  }
+  newGust();
+
+  var last = performance.now(), clock = 0, gustCycle = -1;
+  function frame(now) {
+    var dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
+    var W = head.clientWidth, H = head.clientHeight;
+    var travel = H + 140;
+
+    /* gust object: 15 s cycle, crosses during GUST_START..GUST_START+GUST_TIME */
+    var c = clock % CYCLE, cyc = Math.floor(clock / CYCLE);
+    if (cyc !== gustCycle && c < GUST_START) { gustCycle = cyc; newGust(); }
+    var gt = (c - GUST_START) / GUST_TIME;
+    gust.active = gt >= 0 && gt <= 1;
+    gust.px = gust.x; gust.py = gust.y;
+    if (gust.active) {
+      var loop = Math.exp(-Math.pow((gt - 0.5) / 0.12, 2));
+      gust.x = -60 + gt * (W + 120);
+      gust.y = H * gust.yPct - 18 * Math.sin(gt * Math.PI) - 26 * loop * Math.sin((gt - 0.38) * Math.PI * 4);
+      var op = Math.min(1, gt / 0.08, (1 - gt) / 0.08) * 0.95;
+      gust.el.style.opacity = op.toFixed(2);
+      gust.el.style.transform = 'translate(' + (gust.x - gust.w / 2).toFixed(1) + 'px,' + (gust.y - gust.w / 2).toFixed(1) + 'px) rotate(' + (gt * 900).toFixed(0) + 'deg)';
+    } else {
+      gust.el.style.opacity = 0;
+    }
+    var gvx = dt ? (gust.x - gust.px) / dt : 0, gvy = dt ? (gust.y - gust.py) / dt : 0;
+
+    fallers.forEach(function (f) {
+      var r = f.w * 0.42, op;
+      if (f.mode === 'fall') {
+        var ox = f.x, oy = f.y;
+        f.t += dt / f.dur;
+        if (f.t >= 1) f.t -= 1;
+        var a = f.t * Math.PI * 2 + f.ph;
+        f.x = W * f.xPct / 100 + f.w / 2 + f.sway * Math.sin(a);
+        f.y = -70 + f.t * travel;
+        f.rot = f.spin * Math.sin(a + 0.6);
+        f.vx = dt ? (f.x - ox) / dt : 0; f.vy = dt ? (f.y - oy) / dt : 0;
+        if (Math.abs(f.vx) > 400) f.vx = 0;                    /* ignore the wrap back to the top */
+        op = Math.min(1, f.t / 0.1, (1 - f.t) / 0.1) * 0.9;
+
+        /* collision with the gust object (circle vs circle) */
+        if (gust.active && op > 0.2) {
+          var dx = f.x - gust.x, dy = f.y - gust.y, d = Math.sqrt(dx * dx + dy * dy), rr = r + gust.w * 0.42;
+          if (d < rr && d > 0.01) {
+            var nx = dx / d, ny = dy / d;
+            var vrel = (f.vx - gvx) * nx + (f.vy - gvy) * ny;   /* closing speed along the contact normal */
+            if (vrel < 0) {
+              /* gust object is driven by the wind, so treat it as the heavier body: faller takes the impulse */
+              f.vx -= (1 + RESTITUTION) * vrel * nx;
+              f.vy -= (1 + RESTITUTION) * vrel * ny;
+              /* off-centre hits set it spinning: tangential speed of the gust relative to the faller */
+              var tang = (gvx - f.vx) * -ny + (gvy - f.vy) * nx;
+              f.vr = -tang * 1.6;
+              f.x = gust.x + nx * rr; f.y = gust.y + ny * rr;     /* separate so they don't stick */
+              f.mode = 'bounce';
+            }
+          }
+        }
+      } else {
+        f.vy += GRAVITY * dt;
+        f.x += f.vx * dt; f.y += f.vy * dt; f.rot += f.vr * dt;
+        op = 0.9;
+        if (f.y > H + 80 || f.x < -100 || f.x > W + 100 || f.y < -200) { f.mode = 'fall'; f.t = 0; f.vr = 0; }
+      }
+      f.el.style.opacity = op.toFixed(2);
+      f.el.style.transform = 'translate(' + (f.x - f.w / 2).toFixed(1) + 'px,' + (f.y - f.w / 2).toFixed(1) + 'px) rotate(' + f.rot.toFixed(0) + 'deg)';
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
